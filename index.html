@@ -8,6 +8,8 @@
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#faf9f6;color:#292b27}
+ <div id="cartBar" style="position:fixed;top:0;left:0;right:0;background:#000;color:#fff;padding:10px;text-align:center;z-index:999">🛒 السلة: <span id="cartCount">0</span> | <button onclick="checkout()">اطلب الحين</button></div>
+<br><br>
 header{padding:20px 6%;display:flex;justify-content:space-between;align-items:center;background:white}
 .logo{font-size:27px;font-weight:bold;color:#45634c}
 .logo small{display:block;font-size:12px;font-weight:normal}
@@ -104,13 +106,30 @@ fetch('stores.json')
     box.innerHTML = '';
     data.forEach(s => {
       box.innerHTML += `
-      <div class="store" data-category="${s.category}">
-        <strong>${s.name}</strong>
-        <p>${s.product} - ${s.price}</p>
-        <a href="https://wa.me/${s.whatsapp}" target="_blank"><button>أضف للسلة</button></a>
-      </div>`;
-    });
+  <div class="store" data-category="${s.category}">
+  <strong>${s.name}</strong>
+  <p>${s.product} - ${s.price}
+  <button onclick="addToCart...">أضف للسلة</button>
+</div>`;
+       });
   });  });
+</script>
+ <script>
+let cart = [];
+function addToCart(name, product, price, whatsapp) {
+  cart.push({name, product, price, whatsapp});
+  document.getElementById('cartCount').innerText = cart.length;
+  alert('تمت الإضافة للسلة ✅');
+}
+function checkout() {
+  if(cart.length === 0){ alert('السلة فاضية'); return; }
+  let msg = 'أبغى أطلب:\n';
+  cart.forEach((item, i) => {
+    msg += (i+1) + '. ' + item.product + ' - ' + item.price + ' من ' + item.name + '\n';
+  });
+  let firstShop = cart[0].whatsapp;
+  window.open('https://wa.me/' + firstShop + '?text=' + encodeURIComponent(msg), '_blank');
+}
 </script>
 </body>
 </html>
