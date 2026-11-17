@@ -3,195 +3,150 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>دَرْب | DARB</title>
+<title>دَرْب | DARB - كل طلب له دَرْب</title>
 <style>
-body{font-family:Arial;background:#f7f3ea;margin:0;text-align:center}
-header{background:#1e3a2f;color:white;padding:15px}
-.cart-bar{background:#1e3a2f;color:white;padding:10px;position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center}
-button{background:#2e5a4a;color:white;border:none;padding:10px 18px;border-radius:10px;margin:5px;cursor:pointer}
-.cat-btn{background:white;color:#1e3a2f;border:1px solid #1e3a2f}
-.cat-btn.active{background:#1e3a2f;color:white}
-.store{background:white;margin:15px;padding:20px;border-radius:15px;box-shadow:0 2px 8px #ccc;cursor:pointer}
-.product{background:#fff;padding:12px;margin:10px;border-radius:12px;border:1px solid #eee}
-.product img{width:100%;max-width:300px;border-radius:12px}
-footer{background:#1e3a2f;color:white;padding:20px;margin-top:20px}
-input,select{padding:12px;width:92%;border-radius:10px;border:1px solid #ccc;margin-bottom:10px;box-sizing:border-box}
-input.readonly-input{background:#eee;color:#333;font-weight:bold}
-.qty-box{display:flex;align-items:center;justify-content:center;gap:10px;margin:10px 0}
-.qty-btn{width:40px;height:40px;font-size:22px;padding:0;background:#1e3a2f;border-radius:50%}
-.qty-num{font-size:20px;font-weight:bold;min-width:30px}
-.cart-item{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #eee;padding:10px 0;text-align:right}
-.pay-action-btn{width:100%;padding:14px;font-size:16px;font-weight:bold;border-radius:12px;margin-top:10px}
-.summary-row{display:flex;justify-content:space-between;padding:6px 0;font-size:15px}
-.summary-total{display:flex;justify-content:space-between;border-top:2px solid #1e3a2f;padding-top:10px;margin-top:10px;font-weight:bold;font-size:18px}
-.bell{position:relative;background:white;color:#1e3a2f;font-size:22px;padding:8px 14px;border-radius:50%}
-.bell-badge{position:absolute;top:-5px;right:-5px;background:red;color:white;font-size:12px;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}
-.notif-panel{display:none;position:fixed;top:60px;left:10px;right:10px;background:white;color:#333;border-radius:15px;padding:15px;z-index:100;box-shadow:0 5px 20px rgba(0,0,0,0.3);text-align:right;max-height:70vh;overflow:auto}
-.order-card{background:#f9f9f9;border:1px solid #eee;border-radius:12px;padding:12px;margin-bottom:10px;font-size:14px}
-.receipt-btn{display:block;background:#1e3a2f;color:white;text-align:center;padding:13px;border-radius:12px;font-weight:bold;cursor:pointer;margin-top:12px}
-.receipt-preview{width:100%;max-width:300px;border-radius:12px;margin-top:10px;display:none;border:2px solid #4CAF50}
-.receipt-required{color:#c62828;font-size:13px;font-weight:bold;text-align:center}
-.toast{display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#333;color:white;padding:12px 20px;border-radius:12px;z-index:999;font-size:15px;max-width:90%;text-align:center}
-.error-msg{color:#c62828;font-size:13px;font-weight:bold;display:none;text-align:center}
+*{box-sizing:border-box;font-family:system-ui,Tahoma,sans-serif}
+body{margin:0;background:#F5F0E6;color:#222}
+header{background:#536343;color:#fff;padding:14px 16px;position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center}
+header b{font-size:22px;letter-spacing:1px}
+header span{font-size:12px;background:#D8C8AE;color:#333;padding:4px 8px;border-radius:20px}
+nav{display:flex;gap:6px;overflow:auto;padding:10px;background:#fff}
+nav button{white-space:nowrap;border:1px solid #D8C8AE;background:#F5F0E6;padding:8px 14px;border-radius:20px;cursor:pointer}
+nav button.active{background:#536343;color:#fff}
+.wrap{max-width:900px;margin:auto;padding:16px}
+.card{background:#fff;border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+h1{margin:6px 0;font-size:30px;color:#536343} h2{color:#536343;margin:8px 0}
+input,select,textarea{width:100%;padding:12px;border:1px solid #D8C8AE;border-radius:12px;margin:6px 0;background:#fff;font-size:15px}
+.btn{background:#536343;color:#fff;border:0;padding:13px 18px;border-radius:12px;width:100%;font-size:16px;cursor:pointer;font-weight:700}
+.btn2{background:#D8C8AE;color:#222;border:0;padding:10px 14px;border-radius:10px;cursor:pointer}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:600px){.grid{grid-template-columns:1fr}}
+.store,.prod{cursor:pointer;border:1px solid #eee;border-radius:16px;overflow:hidden;background:#fff}
+.store img,.prod img{width:100%;height:140px;object-fit:cover}
+.store div,.prod div{padding:10px}
+.price{color:#536343;font-weight:800}
+.flex{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.badge{background:#F5F0E6;padding:4px 8px;border-radius:20px;font-size:12px}
+.hidden{display:none}
+.cartRow{display:flex;justify-content:space-between;align-items:center;border-bottom:1px dashed #ddd;padding:10px 0}
+.small{font-size:13px;color:#666}
+.success{background:#536343;color:#fff;text-align:center;padding:24px;border-radius:18px}
 </style>
 </head>
 <body>
-<div id="toast" class="toast"></div>
-<header>
-<h1>دَرْب | DARB</h1>
-<p>اطلب من أفضل المتاجر</p>
-<input id="search" placeholder="ابحث عن متجر..." onkeyup="searchStores()">
-<div id="loginBox" style="background:white; color:#333; padding:12px; border-radius:12px; margin-top:12px; text-align:right;">
-  <div id="loginForm">
-    <b>👤 تسجيل الدخول</b><br>
-    <input id="loginName" type="text" placeholder="كتابة الاسم الثلاثي .." style="width:100%;">
-    <input id="loginPhone" type="tel" placeholder="رقم الهاتف العماني - 8 أرقام تبدأ بـ 9 مثال: 94116067" style="width:100%;direction:ltr;text-align:right;" maxlength="8" inputmode="numeric">
-    <p id="loginPhoneError" class="error-msg">⚠️ الرقم غلط! لازم 8 أرقام فقط، تبدأ بـ 9 أو 7، بدون حروف</p>
-    <button onclick="doLogin()" style="width:100%; background:#1e3a2f;">دخول ✅</button>
-  </div>
-  <div id="welcomeBox" style="display:none; text-align:center;">
-    <b>أهلاً <span id="welcomeName"></span> 👋</b><br>
-    <span style="font-size:13px; color:#888;" id="welcomePhone"></span><br>
-    <button onclick="doLogout()" style="background:#c62828; padding:6px 14px; font-size:13px;">تسجيل خروج</button>
-  </div>
-</div>
-</header>
-<div id="notifPanel" class="notif-panel">
-  <div style="display:flex;justify-content:space-between;align-items:center;"><h3 style="margin:0;">🔔 طلباتي الخاصة</h3><button onclick="closeNotif()" style="background:#c62828;">✕</button></div>
-  <p id="notifUserText" style="font-size:13px;color:#1e3a2f;font-weight:bold;"></p>
-  <p id="notifCountText" style="font-size:13px;color:#888;"></p>
-  <div id="notifList"></div>
-  <button onclick="clearMyOrders()" style="background:#c62828;width:100%;">🗑️ مسح طلباتي فقط</button>
-</div>
-<div id="successMsg" style="display:none; background:#e8f5e9; padding:20px; border-radius:15px; margin:15px; text-align:center; font-size:18px; font-weight:bold; border:1px solid #a5d6a7;">تم حفظ طلبج وتم فتح واتساب ❤️</div>
-<div class="cart-bar">
-<span>🛒 السلة: <span id="cartCount">0</span></span>
-<span>
-<button onclick="openNotif()" class="bell">🔔 <span id="bellBadge" class="bell-badge" style="display:none;">0</span></button>
-<button onclick="openNotif()">📂 طلباتي</button>
-<button onclick="openStore('Maith')">🛍️ تسوقي الحين</button>
-</span>
-</div>
+<header><div><b>دَرْب | DARB</b><div style="font-size:13px">كل طلب له دَرْب ❤️</div></div><span onclick="show('cart')">🛒 السلة <b id="cartCount">0</b></span></header>
+
+<nav>
+<button class="active" onclick="show('home',this)">🏠 الرئيسية</button>
+<button onclick="show('cats',this)">🛍️ الأقسام</button>
+<button onclick="show('stores',this)">🏪 المتاجر</button>
+<button onclick="show('cart',this)">🛒 السلة والدفع</button>
+<button onclick="show('dash',this)">⚙️ حسابي / إدارة</button>
+</nav>
+
+<div class="wrap">
+
+<!-- HOME -->
 <div id="home">
-<h2>اختر التصنيف</h2>
-<button class="cat-btn active" onclick="filterCat('الكل',this)">الكل</button>
-<button class="cat-btn" onclick="filterCat('مطاعم',this)">مطاعم</button>
-<button class="cat-btn" onclick="filterCat('بقالات',this)">بقالات</button>
-<button class="cat-btn" onclick="filterCat('مشاريع منزلية',this)">مشاريع منزلية</button>
-<button class="cat-btn" onclick="filterCat('حلويات',this)">حلويات</button>
-<div id="stores"><div class="store" data-category="مشاريع منزلية" onclick="openStore('Maith')"><strong>متجر ميث - Maith</strong><p>منتجات عناية للجسم والبشرة</p><button>ادخل المتجر</button></div></div>
+<div class="card" style="text-align:center">
+<div style="font-size:50px">🛵</div>
+<h1>دَرْب | DARB</h1>
+<p>منصة تسوق وتوصيل إلكترونية في سلطنة عُمان<br><b>كل طلب له دَرْب ❤️</b></p>
+<input id="search" placeholder="🔍 ابحث عن مطعم، بقالة، ورد، منتج..." oninput="doSearch(this.value)">
+<button class="btn" onclick="show('cats')">ابدأ التسوق ←</button>
+<p class="small">مطاعم • بقالات • محلات • ورد • مشاريع منزلية</p>
 </div>
-<div id="store-Maith" style="display:none;">
-<button onclick="backToStores()">⬅ رجوع للمتاجر</button>
-<h2>متجر ميث - Maith</h2>
-<p>منتجات عناية للجسم والبشرة</p>
-
-<!-- ✅ 1 - النيلة الزرقاء - نفس اسم الملف اللي عندج -->
-<div class="product">
-<img src="ABABCCC5-BF2E-4CEE-8DD9-5B5AC99F6846.png">
-<p><b>مقشر النيلة الزرقاء</b> - 5.000</p>
-<div class="qty-box"><button class="qty-btn" onclick="changeQty('qty1',-1)">-</button><span class="qty-num" id="qty1">1</span><button class="qty-btn" onclick="changeQty('qty1',1)">+</button></div>
-<button onclick="addToCart('مقشر النيلة الزرقاء',5,'qty1')">أضف للسلة</button>
+<div class="card"><h2>🔥 متاجر مميزة اليوم</h2><div class="grid" id="featured"></div></div>
 </div>
 
-<!-- ✅ 2 - الوردي - هذا كان مكتوب عليه مقشر الجل وهو غلط، الحين صححته للوردي عشان يطابق الصورة -->
-<div class="product">
-<img src="37E24DE2-05D6-41C6-A8D6-78E95D3EB0FD.png">
-<p><b>المقشر الوردي</b> - 4.500</p>
-<div class="qty-box"><button class="qty-btn" onclick="changeQty('qty2',-1)">-</button><span class="qty-num" id="qty2">1</span><button class="qty-btn" onclick="changeQty('qty2',1)">+</button></div>
-<button onclick="addToCart('المقشر الوردي',4.5,'qty2')">أضف للسلة</button>
+<!-- CATS -->
+<div id="cats" class="hidden">
+<div class="card"><h2>اختر القسم</h2><p class="small">اختار قسم عشان تشوف المتاجر فيه</p></div>
+<div class="grid" id="catGrid"></div>
 </div>
 
-<!-- ✅ 3 - الكريمي -->
-<div class="product">
-<img src="DE01894F-B678-41BA-826B-E50AB0E0BBF0.png">
-<p><b>المقشر الكريمي</b> - 3.900</p>
-<div class="qty-box"><button class="qty-btn" onclick="changeQty('qty3',-1)">-</button><span class="qty-num" id="qty3">1</span><button class="qty-btn" onclick="changeQty('qty3',1)">+</button></div>
-<button onclick="addToCart('المقشر الكريمي',3.9,'qty3')">أضف للسلة</button>
+<!-- STORES -->
+<div id="stores" class="hidden">
+<div class="card"><h2 id="storeTitle">كل المتاجر</h2><p class="small" id="storeSub">اضغط على أي متجر عشان تشوف منتجاته</p></div>
+<div class="grid" id="storeGrid"></div>
 </div>
 
-<div style="background:white; padding:15px; border-radius:15px; margin:15px; text-align:right; direction:rtl;">
-  <h3 style="margin:0 0 12px 0;">🛒 سلة المنتجات</h3>
-  <div id="cartItems"><p style="color:#888; text-align:center;">السلة فاضية، أضيفي منتجات من فوق 👆</p></div>
-  <div id="cartTotal" style="display:none;">
-    <div class="summary-row"><span>المجموع الفرعي:</span><span id="subTotalPrice">0.000 ر.ع</span></div>
-    <div class="summary-row"><span>ضريبة القيمة المضافة (5%):</span><span id="vatPrice">0.000 ر.ع</span></div>
-    <div class="summary-row"><span>🚚 قيمة الشحن:</span><span id="shippingPrice">2.000 ر.ع</span></div>
-    <div class="summary-total"><span>المجموع الكلي:</span><span id="totalPrice">0.000 ر.ع</span></div>
-  </div>
+<!-- PRODUCTS -->
+<div id="products" class="hidden">
+<div class="card"><button class="btn2" onclick="show('stores')">→ رجوع للمتاجر</button><h2 id="prodStoreName"></h2><p class="small" id="prodStoreDesc"></p></div>
+<div class="grid" id="prodGrid"></div>
 </div>
-<div style="background:white; padding:15px; border-radius:15px; margin:15px; text-align:right; direction:rtl;">
-  <h3 style="margin:0 0 12px 0;">🚚 نوع الشحن</h3>
-  <label style="display:flex; justify-content:space-between; align-items:center; border:1px solid #ddd; padding:14px; border-radius:12px; margin-bottom:10px; cursor:pointer;"><span>🏠 الشحن للمنزل - 2.000 ر.ع</span><input type="radio" name="shipping" value="للمنزل" checked style="width:20px; height:20px;" onchange="updateCartDisplay()"></label>
-  <label style="display:flex; justify-content:space-between; align-items:center; border:1px solid #ddd; padding:14px; border-radius:12px; cursor:pointer;"><span>🏢 الشحن للمكتب - 1.000 ر.ع</span><input type="radio" name="shipping" value="للمكتب" style="width:20px; height:20px;" onchange="updateCartDisplay()"></label>
+
+<!-- CART -->
+<div id="cart" class="hidden">
+<div class="card"><h2>🛒 السلة والدفع</h2><div id="cartItems"></div><div id="totals"></div></div>
+<div class="card"><h2>📍 بيانات التوصيل</h2>
+<input id="custName" placeholder="الاسم الكامل *">
+<input id="custPhone" placeholder="رقم الهاتف * - إجباري">
+<textarea id="custAddr" placeholder="عنوان التوصيل - الولاية / المنطقة / البيت *"></textarea>
+<h3>طريقة الدفع</h3>
+<label><input type="radio" name="pay" value="cod" checked> 💵 الدفع عند الاستلام</label><br>
+<label><input type="radio" name="pay" value="bank"> 🏦 التحويل البنكي - مع رفع إيصال الدفع</label>
+<div id="receiptBox" class="hidden"><p class="small">ارفع صورة الإيصال:</p><input type="file" accept="image/*"></div>
+<button class="btn" onclick="placeOrder()">تأكيد الطلب ✅</button>
 </div>
-<div style="background:white; padding:15px; border-radius:15px; margin:15px; text-align:right; direction:rtl;">
-  <h3 style="margin:0 0 15px 0;">الدفع ✅</h3>
-  <p style="font-size:13px;color:#c62828;font-weight:bold;text-align:center;">* الدفع إجباري عن طريق رقم الهاتف فقط *</p>
-  <div style="display:flex; justify-content:space-between; align-items:center; border:2px solid #4CAF50; background:#e8f5e9; padding:14px; border-radius:12px; margin-bottom:10px;"><span>📱 الدفع عن طريق رقم الهاتف ✅</span><span style="background:#4CAF50;color:white;padding:4px 10px;border-radius:10px;font-size:12px;">إجباري</span></div>
-  <div style="display:block; background:#fff8e1; padding:12px; border-radius:10px; margin-top:10px; font-size:14px;">
-    <b>📱 الدفع عن طريق رقم الهاتف:</b><br>حولي المبلغ على هذا الرقم:<br><b style="font-size:22px;">94116067</b>
-    <p class="receipt-required">* صورة الإيصال إجبارية *</p>
-    <label for="receiptInput" class="receipt-btn">📸 إضافة صورة الإيصال * إجباري</label>
-    <input type="file" id="receiptInput" accept="image/*" style="display:none;" onchange="previewReceipt(this)">
-    <img id="receiptPreview" class="receipt-preview">
-    <p id="receiptMsg" style="display:none; color:#2e7d32; font-weight:bold; text-align:center;">✅ تم إضافة صورة الإيصال، شكراً لك!</p>
-    <p id="receiptError" style="display:none; color:#c62828; font-weight:bold; text-align:center;">⚠️ لازم ترفعين صورة الإيصال قبل ما ترسلين الطلب</p>
-  </div>
-  <button class="pay-action-btn" onclick="confirmPaid()" style="background:#4CAF50;">✅ تم دفع المبلغ</button>
-  <div id="payConfirmMsg" style="display:none; text-align:center; padding:10px; border-radius:10px; margin-top:10px; font-weight:bold;"></div>
 </div>
-<div style="background:white; padding:15px; border-radius:15px; margin:15px; text-align:right; direction:rtl;">
-  <h3 style="margin:0 0 12px 0;">👤 بيانات الزبون</h3>
-  <label>الاسم الثلاثي *</label><input id="customerName" type="text" placeholder="سجلي دخولج أولاً" class="readonly-input" readonly>
-  <label>رقم هاتف الزبونة *</label><input id="phone" type="text" placeholder="سجلي دخولج أولاً" class="readonly-input" readonly>
-  <h3 style="margin:15px 0 12px 0;">📍 عنوان التوصيل</h3>
-  <label>البلد</label><select id="country"><option>عُمان</option><option>الإمارات</option><option>السعودية</option></select>
-  <label>المحافظة</label><select id="governorate" onchange="updateWilaya()"><option>مسقط</option><option>ظفار</option><option>مسندم</option><option>البريمي</option><option>شمال الباطنة</option><option>جنوب الباطنة</option><option>الداخلية</option><option>شمال الشرقية</option><option>جنوب الشرقية</option><option>الظاهرة</option><option>الوسطى</option></select>
-  <label>الولاية</label><select id="wilaya"></select>
-  <label>المنطقة / الحي</label><input id="area" type="text" placeholder="مثال: الخوض، الموالح، العذيبة">
+
+<!-- CONFIRM -->
+<div id="confirm" class="hidden">
+<div class="success"><div style="font-size:50px">✅</div><h2>تم إتمام عملية طلبك بنجاح!</h2><p>بيتم تجهيز طلبك وشحنه قريباً ❤️</p><p>رقم الطلب: <b id="orderNo"></b></p><p id="orderDetail" class="small"></p><p>حالة الطلب: <b>قيد التجهيز 🍳</b></p></div>
+<button class="btn" onclick="show('home')">رجوع للرئيسية</button>
 </div>
-<div style="margin:20px 15px 30px 15px;"><button onclick="orderNow()" style="width:100%; padding:18px; font-size:20px; font-weight:bold; background:#25D366; border-radius:15px;">💬 إرسال الطلب عبر واتساب</button></div>
+
+<!-- DASH -->
+<div id="dash" class="hidden">
+<div class="card"><h2>⚙️ أنظمة الموقع</h2>
+<select id="role" onchange="roleChange()"><option value="customer">👤 حساب العميل - طلباتي</option><option value="store">🏪 حساب المتجر - طلباتي ومنتجاتي</option><option value="driver">🛵 حساب المندوب - الطلبات المسندة</option><option value="admin">👑 لوحة الإدارة</option></select>
+<div id="dashContent" style="margin-top:12px"></div>
 </div>
-<footer><p><b>دَرْب | DARB</b></p><p>سلطنة عُمان</p></footer>
+</div>
+
+</div>
+
 <script>
-let cart = []; let payStatus = 'لم يتم تحديد حالة الدفع'; let receiptPhoneAdded = false;
-function normalizePhone(raw){ if(!raw) return ''; let s = String(raw).trim(); const map = {'٠':'0','١':'1','٢':'2','٣':'3','٤':'4','٥':'5','٦':'6','٧':'7','٨':'8','٩':'9','۰':'0','۱':'1','۲':'2','۳':'3','۴':'4','۵':'5','۶':'6','۷':'7','۸':'8','۹':'9'}; s = s.split('').map(c=> map[c] || c).join(''); s = s.replace(/[\s\-\(\)]/g,''); if(s.startsWith('+968')) s = s.slice(4); if(s.startsWith('968') && s.length==11) s = s.slice(3); return s; }
-function isValidOmaniPhone(raw){ let s = normalizePhone(raw); if(!/^[0-9]+$/.test(s)) return {valid:false, clean:''}; if(s.length !== 8) return {valid:false, clean:s}; if(!/^[978]/.test(s)) return {valid:false, clean:s}; return {valid:true, clean:s}; }
-function showToast(msg){ let t = document.getElementById('toast'); t.innerText = msg; t.style.display = 'block'; setTimeout(()=>{ t.style.display='none'; }, 3500); }
-function previewReceipt(input){ let file = input.files[0]; if(!file) return; let reader = new FileReader(); reader.onload = function(e){ let img = document.getElementById('receiptPreview'); img.src = e.target.result; img.style.display = 'block'; document.getElementById('receiptMsg').style.display = 'block'; document.getElementById('receiptError').style.display='none'; receiptPhoneAdded = true; }; reader.readAsDataURL(file); }
-const wilayasByGov = { "مسقط":["مسقط","السيب","بوشر","مطرح","العامرات","قريات"], "ظفار":["صلالة","طاقة","مرباط","سدح","رخيوت","ضلكوت","مقشن","شليم وجزر الحلانيات","ثمريت","المزيونة"], "مسندم":["خصب","دبا","بخا","مدحاء"], "البريمي":["البريمي","محضة","السنينة"], "شمال الباطنة":["صحار","شناص","لوى","صحم","الخابورة","السويق"], "جنوب الباطنة":["الرستاق","العوابي","نخل","وادي المعاول","بركاء","المصنعة"], "الداخلية":["نزوى","بهلا","منح","الحمراء","أدم","إزكي","سمائل","بدبد"], "شمال الشرقية":["إبراء","المضيبي","بدية","القابل","وادي بني خالد","دماء والطائيين"], "جنوب الشرقية":["صور","الكامل والوافي","جعلان بني بو حسن","جعلان بني بو علي","مصيرة"], "الظاهرة":["عبري","ينقل","ضنك"], "الوسطى":["هيما","محوت","الدقم","الجازر"] };
-function getCurrentUser(){ let n = localStorage.getItem('darb_name') || ''; let p = localStorage.getItem('darb_phone') || ''; return {name:n, phone:p}; }
-function getAllOrders(){try{return JSON.parse(localStorage.getItem('darb_orders')||'[]')}catch(e){return []}}
-function getMyOrders(){ let user = getCurrentUser(); if(!user.phone) return []; return getAllOrders().filter(o => o.phone === user.phone); }
-function checkSpam(phone){ let all = getAllOrders().filter(o=> o.phone===phone); let now = Date.now(); let recent = all.filter(o=>{ if(!o.timestamp) return false; return (now - o.timestamp) < 60*60*1000; }); if(recent.length >= 3){ return {blocked:true}; } let last = all[0]; if(last && last.timestamp && (now - last.timestamp) < 2*60*1000){ return {blocked:true, tooFast:true}; } return {blocked:false}; }
-function saveOrder(order){ let arr = getAllOrders(); arr.unshift(order); localStorage.setItem('darb_orders', JSON.stringify(arr)); let user = getCurrentUser(); let key = 'darb_unread_' + (user.phone || 'guest'); let unread = parseInt(localStorage.getItem(key)||'0')+1; localStorage.setItem(key, unread); updateBell(); }
-function updateBell(){ let user = getCurrentUser(); let key = 'darb_unread_' + (user.phone || 'guest'); let unread = parseInt(localStorage.getItem(key)||'0'); let badge = document.getElementById('bellBadge'); if(unread>0 && user.phone){badge.style.display='flex';badge.innerText=unread;}else{badge.style.display='none';} }
-function openNotif(){ let user = getCurrentUser(); if(!user.phone){ showToast('⚠️ سجلي دخولج أولاً'); window.scrollTo(0,0); return; } let arr = getMyOrders(); document.getElementById('notifPanel').style.display='block'; document.getElementById('notifUserText').innerText = '👤 ' + user.name + ' - 📞 ' + user.phone; document.getElementById('notifCountText').innerText = 'عندج ' + arr.length + ' طلب خاص فيج'; let list = document.getElementById('notifList'); if(arr.length==0){ list.innerHTML='<p style="text-align:center;color:#888;">ما عندج طلبات بعد، اطلبي الحين 💖</p>'; }else{ list.innerHTML = arr.map((o,i)=>'<div class="order-card"><b>🔔 طلب #'+(arr.length-i)+'</b> <span style="color:#888;font-size:12px;">'+o.date+'</span><br><b>👤 '+o.name+'</b> - 📞 '+o.phone+'<br>'+o.items.join('<br>')+'<br><b>المجموع: '+o.total+' ر.ع</b><br>🚚 '+o.shipType+' - '+o.ship+' ر.ع<br>💳 '+o.pay+' - '+o.payStatus+'<br>🧾 الإيصال: '+(o.receipt ? 'تم إرفاق صورة الإيصال ✅' : 'بدون إيصال')+'<br>📍 '+o.gov+' - '+o.wilaya+' - '+o.area+'<br><button onclick="reorderMy('+i+')" style="background:#25D366;padding:6px 12px;font-size:13px;">إعادة إرسال واتساب</button></div>').join(''); } let key = 'darb_unread_' + user.phone; localStorage.setItem(key,'0'); updateBell(); }
-function closeNotif(){document.getElementById('notifPanel').style.display='none';}
-function clearMyOrders(){ let user = getCurrentUser(); if(!user.phone) return; if(confirm('متأكدة تمسحين طلباتج انتي فقط؟')){ let all = getAllOrders(); let rest = all.filter(o => o.phone !== user.phone); localStorage.setItem('darb_orders', JSON.stringify(rest)); localStorage.setItem('darb_unread_' + user.phone,'0'); openNotif(); } }
-function reorderMy(i){ let arr = getMyOrders(); let o = arr[i]; if(!o) return; let msg='🛍️ طلب جديد من متجر ميث - DARB\n\n👤 الاسم الثلاثي: '+o.name+'\n📞 رقم هاتف الزبونة: '+o.phone+'\n\n'+o.items.join('\n')+'\n\nالمجموع الكلي: '+o.total+' ر.ع\n\nطريقة الدفع: '+o.pay+'\n📍 '+o.gov+' - '+o.wilaya+' - '+o.area; window.open('https://wa.me/96894116067?text='+encodeURIComponent(msg),'_blank'); }
-updateBell();
-function isTripleName(name){let parts = name.trim().split(/\s+/);return parts.length >= 3 && parts.every(p => p.length >= 2);}
-function checkLogin(){let n = localStorage.getItem('darb_name');let p = localStorage.getItem('darb_phone');if(n && p){document.getElementById('loginForm').style.display='none';document.getElementById('welcomeBox').style.display='block';document.getElementById('welcomeName').innerText = n;document.getElementById('welcomePhone').innerText = p;document.getElementById('customerName').value = n;document.getElementById('phone').value = p;} updateBell();}
-document.getElementById('loginPhone').addEventListener('input', function(){ let v = this.value; const map = {'٠':'0','١':'1','٢':'2','٣':'3','٤':'4','٥':'5','٦':'6','٧':'7','٨':'8','٩':'9','۰':'0','۱':'1','۲':'2','۳':'3','۴':'4','۵':'5','۶':'6','۷':'7','۸':'8','۹':'9'}; v = v.split('').map(c=> map[c] || c).join(''); v = v.replace(/[^0-9]/g,'').slice(0,8); this.value = v; let check = isValidOmaniPhone(v); if(v.length==8 && !check.valid){ document.getElementById('loginPhoneError').style.display='block'; } else { document.getElementById('loginPhoneError').style.display='none'; } });
-function doLogin(){ let n = document.getElementById('loginName').value.trim(); let pRaw = document.getElementById('loginPhone').value.trim(); if(!n){ showToast('اكتبي اسمج لو سمحتي'); return; } if(!isTripleName(n)){ showToast('⚠️ يجب كتابة الاسم الثلاثي كاملاً'); return; } let check = isValidOmaniPhone(pRaw); if(!check.valid){ document.getElementById('loginPhoneError').style.display='block'; showToast('⚠️ الرقم غلط! لازم 8 أرقام فقط، تبدأ بـ 9 أو 7'); return; } document.getElementById('loginPhoneError').style.display='none'; localStorage.setItem('darb_name', n); localStorage.setItem('darb_phone', check.clean); checkLogin(); showToast('أهلاً ' + n + ' 👋 تم تسجيل دخولج'); }
-function doLogout(){localStorage.removeItem('darb_name');localStorage.removeItem('darb_phone');document.getElementById('loginForm').style.display='block';document.getElementById('welcomeBox').style.display='none';document.getElementById('customerName').value='';document.getElementById('phone').value=''; updateBell();}
-checkLogin();
-function getShipping(){let s = document.querySelector('input[name="shipping"]:checked');if(!s) return 2;return s.value === 'للمكتب' ? 1 : 2;}
-function getTotals(){let sub = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);let vat = sub * 0.05;let ship = cart.length==0 ? 0 : getShipping();let total = sub + vat + ship;return {sub:sub, vat:vat, ship:ship, total:total};}
-function updateWilaya(){let gov = document.getElementById('governorate').value;let w = document.getElementById('wilaya');w.innerHTML = '';wilayasByGov[gov].forEach(x=>{let o = document.createElement('option'); o.text = x; w.add(o);});}
-updateWilaya();
-function confirmPaid(){ if(!receiptPhoneAdded){ document.getElementById('receiptError').style.display='block'; showToast('⚠️ لازم ترفعين صورة الإيصال أولاً'); return; } payStatus = 'تم دفع المبلغ ✅';let m = document.getElementById('payConfirmMsg');m.style.display = 'block';m.style.background = '#e8f5e9';m.style.color = '#2e7d32';m.innerText = '✅ تم تأكيد دفع المبلغ، شكراً لك! كملي طلبك بالضغط على إرسال الطلب بالأسفل'; }
-function filterCat(cat, btn){document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('#stores .store').forEach(s=>{if(cat=='الكل' || s.getAttribute('data-category')==cat){ s.style.display='block'; } else { s.style.display='none'; }});}
-function openStore(name){document.getElementById('home').style.display='none';document.getElementById('store-'+name).style.display='block';window.scrollTo(0,0);}
-function backToStores(){document.getElementById('home').style.display='block';document.getElementById('store-Maith').style.display='none';}
-function changeQty(id, change){let el = document.getElementById(id);let val = parseInt(el.innerText) + change;if(val < 1) val = 1;if(val > 99) val = 99;el.innerText = val;}
-function addToCart(name, price, qtyId){let qty = parseInt(document.getElementById(qtyId).innerText);cart.push({name:name, price:price, qty:qty});updateCartDisplay();showToast('تمت إضافة ' + qty + ' × ' + name + ' للسلة ✅');document.getElementById(qtyId).innerText = '1';}
-function updateCartDisplay(){let totalQty = cart.reduce((sum, item) => sum + item.qty, 0);document.getElementById('cartCount').innerText = totalQty;let box = document.getElementById('cartItems');let totalBox = document.getElementById('cartTotal');if(cart.length==0){box.innerHTML = '<p style="color:#888; text-align:center;">السلة فاضية، أضيفي منتجات من فوق 👆</p>';totalBox.style.display = 'none';return;}let html = '';cart.forEach((item, index)=>{html += '<div class="cart-item"><div><b>' + item.name + '</b><br><span style="color:#888; font-size:13px;">' + item.qty + ' × ' + item.price.toFixed(3) + ' ر.ع</span></div><div><b>' + (item.price * item.qty).toFixed(3) + ' ر.ع</b><br><button onclick="removeItem(' + index + ')" style="background:#c62828; padding:5px 10px; font-size:12px;">حذف ❌</button></div></div>';});box.innerHTML = html;let t = getTotals();document.getElementById('subTotalPrice').innerText = t.sub.toFixed(3) + ' ر.ع';document.getElementById('vatPrice').innerText = t.vat.toFixed(3) + ' ر.ع';document.getElementById('shippingPrice').innerText = t.ship.toFixed(3) + ' ر.ع';document.getElementById('totalPrice').innerText = t.total.toFixed(3) + ' ر.ع';totalBox.style.display = 'block';}
-function removeItem(index){cart.splice(index,1);updateCartDisplay();}
-function orderNow(){ if(cart.length==0){ showToast('🛒 السلة فاضية، اختاري منتج أولاً'); openStore('Maith'); return; } let user = getCurrentUser(); if(!user.phone || !isValidOmaniPhone(user.phone).valid){ showToast('⚠️ سجلي دخولج برقم عماني صحيح أولاً'); window.scrollTo(0,0); return; } let custName = user.name; let phone = user.phone; document.getElementById('customerName').value = custName; document.getElementById('phone').value = phone; if(!isTripleName(custName)){ showToast('⚠️ يجب كتابة الاسم الثلاثي كاملاً'); return; } let pay = 'الدفع عن طريق رقم الهاتف'; if(!receiptPhoneAdded){ document.getElementById('receiptError').style.display='block'; showToast('⚠️ لازم ترفعين صورة الإيصال أولاً'); return; } let spam = checkSpam(phone); if(spam.blocked){ if(spam.tooFast){ showToast('⏳ انتظري دقيقتين قبل ما ترسلين طلب ثاني'); } else { showToast('⛔ وصلتي حد الطلبات - 3 طلبات في ساعة'); } return; } let shipType = document.querySelector('input[name="shipping"]:checked').value; let country = document.getElementById('country').value; let gov = document.getElementById('governorate').value; let wilaya = document.getElementById('wilaya').value; let area = document.getElementById('area').value; if(!area){ showToast('اكتبي المنطقة لو سمحتي'); return; } let items = cart.map(i => i.qty + ' × ' + i.name + ' : ' + (i.price * i.qty).toFixed(3) + ' ر.ع'); let t = getTotals(); saveOrder({name:custName, phone:phone, items:items, sub:t.sub.toFixed(3), vat:t.vat.toFixed(3), ship:t.ship.toFixed(3), total:t.total.toFixed(3), pay:pay, payStatus:payStatus, receipt:true, shipType:shipType, country:country, gov:gov, wilaya:wilaya, area:area, date:new Date().toLocaleString('ar-OM'), timestamp:Date.now()}); let msg = '🛍️ طلب جديد من متجر ميث - DARB\n\n👤 الاسم الثلاثي: ' + custName + '\n📞 رقم هاتف الزبونة: ' + phone + '\n\n' + items.join('\n') + '\n\nالمجموع الفرعي: ' + t.sub.toFixed(3) + ' ر.ع\nضريبة القيمة المضافة (5%): ' + t.vat.toFixed(3) + ' ر.ع\n🚚 نوع الشحن: ' + shipType + '\n🚚 قيمة الشحن: ' + t.ship.toFixed(3) + ' ر.ع\nالمجموع الكلي: ' + t.total.toFixed(3) + ' ر.ع\n\nطريقة الدفع: ' + pay + ' ✅\nحالة الدفع: ' + payStatus + '\n🧾 الإيصال: تم إرفاق صورة الإيصال ✅\n\n📍 عنوان التوصيل:\nالبلد: ' + country + '\nالمحافظة: ' + gov + '\nالولاية: ' + wilaya + '\nالمنطقة: ' + area; let url = 'https://wa.me/96894116067?text=' + encodeURIComponent(msg); window.open(url, '_blank'); cart = [];updateCartDisplay(); document.getElementById('successMsg').style.display = 'block'; window.scrollTo(0,0); showToast('تم إرسال طلبج ✅ ارسلي صورة الإيصال في الواتساب'); }
-function searchStores(){let v = document.getElementById('search').value;document.querySelectorAll('#stores .store').forEach(s=>{s.style.display = s.innerText.includes(v) ? 'block' : 'none';});}
+let cats=[
+{id:'food',name:'المطاعم',emoji:'🍔',desc:'أكل عماني، برجر، بيتزا'},
+{id:'grocery',name:'البقالات',emoji:'🛒',desc:'أغراض البيت اليومية'},
+{id:'shops',name:'المحلات',emoji:'🏪',desc:'ملابس، عطور، إلكترونيات'},
+{id:'flowers',name:'محلات الورد',emoji:'🌹',desc:'باقات وهدايا'},
+{id:'home',name:'المشاريع المنزلية',emoji:'🏠',desc:'أكل بيتي، حلويات، حرف'},
+];
+let stores=[
+{id:1,cat:'food',name:'مطعم بيت المشاوي',img:'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600',desc:'مشاوي عمانية طازجة'},
+{id:2,cat:'food',name:'مطعم السلطان',img:'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600',desc:'أكل عماني أصيل'},
+{id:3,cat:'grocery',name:'بقالة النور',img:'https://images.unsplash.com/photo-1578916171728-46686eac8d58?w=600',desc:'توصيل سريع'},
+{id:4,cat:'shops',name:'محل الأناقة',img:'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600',desc:'عطور وملابس'},
+{id:5,cat:'flowers',name:'ورد الجوري',img:'https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=600',desc:'باقات ورد طبيعي'},
+{id:6,cat:'home',name:'مطبخ أم سارة',img:'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=600',desc:'حلويات وأكل بيتي'},
+];
+let products={
+1:[{name:'صحن مشاوي مشكل',price:5.5,img:'https://images.unsplash.com/photo-1544025162-d76694265947?w=600',desc:'مشاوي + خبز + صلصة'},{name:'برياني دجاج',price:3.2,img:'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=600',desc:'برياني عماني'}],
+2:[{name:'شواء عماني',price:8,img:'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600',desc:'لحم طازج'},{name:'هريس',price:2.5,img:'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=600',desc:'هريس باللحم'}],
+3:[{name:'سلة أغراض أسبوعية',price:12,img:'https://images.unsplash.com/photo-1542838132-92c53300491e?w=600',desc:'خضار + فواكه + أساسيات'},{name:'حليب + خبز',price:2,img:'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=600',desc:'طازج يوميا'}],
+4:[{name:'عطر عود عماني',price:15,img:'https://images.unsplash.com/photo-1541643600914-78b084683601?w=600',desc:'عود أصلي'},{name:'عباية أنيقة',price:22,img:'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=600',desc:'قماش فاخر'}],
+5:[{name:'باقة ورد أحمر',price:10,img:'https://images.unsplash.com/photo-1561181286-d3fee7d55364?w=600',desc:'12 وردة + تغليف'},{name:'باقة ورد مشكل',price:14,img:'https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=600',desc:'ورد طبيعي'}],
+6:[{name:'كيكة عسل',price:6,img:'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600',desc:'كيكة بيتي'},{name:'حلويات مشكلة',price:4.5,img:'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=600',desc:'معمول + بقلاوة'}],
+};
+let cart=[]; let currentCat='all'; let currentStore=null;
+function show(id,btn){document.querySelectorAll('.wrap > div').forEach(d=>d.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');window.scrollTo(0,0);if(id=='cart')renderCart();if(id=='dash')roleChange();}
+function renderCats(){document.getElementById('catGrid').innerHTML=cats.map(c=>`<div class="card" onclick="openCat('${c.id}','${c.name}')" style="text-align:center;cursor:pointer"><div style="font-size:40px">${c.emoji}</div><h2>${c.name}</h2><p class="small">${c.desc}</p><button class="btn2">دخول ←</button></div>`).join('');}
+function openCat(id,name){currentCat=id;document.getElementById('storeTitle').innerText='متاجر '+name;renderStores();show('stores');}
+function renderStores(){let list=currentCat=='all'?stores:stores.filter(s=>s.cat==currentCat);document.getElementById('storeGrid').innerHTML=list.map(s=>`<div class="store" onclick="openStore(${s.id})"><img src="${s.img}"><div><b>${s.name}</b><p class="small">${s.desc}</p><span class="badge">⭐ 4.8 • توصيل سريع</span></div></div>`).join('');}
+function openStore(id){currentStore=stores.find(s=>s.id==id);document.getElementById('prodStoreName').innerText=currentStore.name;document.getElementById('prodStoreDesc').innerText=currentStore.desc;document.getElementById('prodGrid').innerHTML=products[id].map((p,i)=>`<div class="prod"><img src="${p.img}"><div><b>${p.name}</b><p class="small">${p.desc}</p><div class="flex"><span class="price">${p.price} ر.ع</span><button class="btn2" onclick="addToCart(${id},${i})">+ إضافة للسلة</button></div></div></div>`).join('');show('products');}
+function addToCart(sid,idx){let p=products[sid][idx];let f=cart.find(x=>x.name==p.name);if(f)f.qty++;else cart.push({...p,qty:1});document.getElementById('cartCount').innerText=cart.reduce((a,b)=>a+b.qty,0);alert('تمت الإضافة للسلة ✅ '+p.name);}
+function renderCart(){let el=document.getElementById('cartItems');if(cart.length==0){el.innerHTML='<p>سلتك فارغة، روح تسوق 😊</p>';document.getElementById('totals').innerHTML='';return;}el.innerHTML=cart.map((c,i)=>`<div class="cartRow"><div><b>${c.name}</b><div class="small">${c.price} ر.ع</div></div><div><button onclick="chg(${i},-1)">-</button> ${c.qty} <button onclick="chg(${i},1)">+</button> <button onclick="delItem(${i})">🗑️</button></div><b>${(c.price*c.qty).toFixed(2)}</b></div>`).join('');let sub=cart.reduce((a,b)=>a+b.price*b.qty,0);let del=1.5;document.getElementById('totals').innerHTML=`<p>المجموع: ${sub.toFixed(2)} ر.ع</p><p>رسوم التوصيل: ${del} ر.ع</p><h3>الإجمالي: ${(sub+del).toFixed(2)} ر.ع</h3>`;}
+function chg(i,d){cart[i].qty+=d;if(cart[i].qty<=0)cart.splice(i,1);document.getElementById('cartCount').innerText=cart.reduce((a,b)=>a+b.qty,0);renderCart();}
+function delItem(i){cart.splice(i,1);document.getElementById('cartCount').innerText=cart.reduce((a,b)=>a+b.qty,0);renderCart();}
+function doSearch(v){if(!v)return;let all=[];for(let k in products)products[k].forEach(p=>{if(p.name.includes(v))all.push(p)});if(all.length){document.getElementById('featured').innerHTML=all.map(p=>`<div class="prod"><img src="${p.img}"><div><b>${p.name}</b><div class="price">${p.price} ر.ع</div></div></div>`).join('');}}
+document.querySelectorAll('input[name="pay"]').forEach(r=>r.addEventListener('change',()=>{document.getElementById('receiptBox').classList.toggle('hidden',document.querySelector('input[name="pay"]:checked').value!='bank');}));
+function placeOrder(){let name=document.getElementById('custName').value;let phone=document.getElementById('custPhone').value;let addr=document.getElementById('custAddr').value;if(!name||!phone||!addr){alert('عبي الاسم ورقم الهاتف والعنوان، كلها إجبارية');return;}if(cart.length==0){alert('سلتك فارغة');return;}let no='DARB-'+Math.floor(1000+Math.random()*9000);let total=cart.reduce((a,b)=>a+b.price*b.qty,0)+1.5;document.getElementById('orderNo').innerText=no;document.getElementById('orderDetail').innerText=`${name} - ${phone} - ${addr} - الإجمالي ${total.toFixed(2)} ر.ع - الدفع: ${document.querySelector('input[name="pay"]:checked').value=='cod'?'عند الاستلام':'تحويل بنكي'}`;cart=[];document.getElementById('cartCount').innerText='0';show('confirm');}
+function roleChange(){let r=document.getElementById('role').value;let c=document.getElementById('dashContent');if(r=='customer')c.innerHTML='<p>طلباتك: <b>DARB-1234 - قيد التجهيز 🍳</b></p><p>طلباتك السابقة: DARB-1001 - تم التوصيل ✅</p>';if(r=='store')c.innerHTML='<p>طلب جديد: DARB-1234 - برياني دجاج x2 - جهز الطلب</p><button class="btn2">تحديث حالة الطلب: تم التجهيز ✅</button><p>منتجاتي: برياني، مشاوي - <button class="btn2">+ إضافة منتج</button></p>';if(r=='driver')c.innerHTML='<p>طلب مسند إليك: DARB-1234 - توصيل إلى بركاء</p><button class="btn2">استلمت الطلب 🛵</button> <button class="btn2">تم التوصيل ✅</button>';if(r=='admin')c.innerHTML='<p>👥 العملاء: 120 | 🏪 المتاجر: 18 | 🛵 المندوبين: 12 | 📦 الطلبات اليوم: 34</p><p>المدفوعات: 245 ر.ع اليوم</p>';}
+renderCats();renderStores();document.getElementById('featured').innerHTML=stores.slice(0,4).map(s=>`<div class="store" onclick="openStore(${s.id})"><img src="${s.img}"><div><b>${s.name}</b><p class="small">${s.desc}</p></div></div>`).join('');
 </script>
 </body>
 </html>
