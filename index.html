@@ -105,6 +105,7 @@ function orderNow(){
 if(cart.length==0){ alert('السلة فاضية'); return; }
 let msg = 'مرحبا، أريد الطلب من متجر ميث - Maith:%0A';
 cart.forEach(item=>{ msg += '- ' + item.name + ' - ' + item.price + '%0A'; });
+  msg += '\nطريقة الدفع: الدفع عند الاستلام 💵';
 window.open('https://wa.me/96894799751?text=' + msg, '_blank');
 }
 function searchStores(){
@@ -114,6 +115,11 @@ s.style.display = s.innerText.includes(v) ? 'block' : 'none';
 });
 }
 </script>
-
+<div style="background:#fff5f7; padding:15px; border-radius:12px; margin:15px; text-align:right; border:1px solid #ffd6e0;">
+  <h3 style="margin:0 0 10px 0;">💳 طريقة الدفع</h3>
+  <label style="display:block; background:white; padding:12px; border-radius:10px; border:2px solid #ff8fab;">
+    <input type="radio" name="payment" checked> 💵 الدفع عند الاستلام - تدفعين لما يوصلك الطلب
+  </label>
+</div>
 </body>
 </html>
