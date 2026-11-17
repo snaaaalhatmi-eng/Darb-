@@ -50,20 +50,20 @@ footer{text-align:center;padding:28px;background:#354b39;color:white;line-height
 <section>
  <h2>تسوّق حسب القسم</h2>
  <div class="categories">
-  <div class="category"><span>🍔</span>مطاعم</div>
-  <div class="category"><span>🛒</span>بقالة</div>
-  <div class="category"><span>☕</span>مقاهي</div>
-  <div class="category"><span>🎁</span>هدايا</div>
-  <div class="category"><span>🏪</span>متاجر</div>
-  <div class="category"><span>🧁</span>مشاريع منزلية</div>
+<div class="category" onclick="filterCategory('مطاعم')"><span>🍔</span> مطاعم </div>
+<div class="category" onclick="filterCategory('بقالة')"><span>🛒</span> بقالة </div>
+<div class="category" onclick="filterCategory('قهوة')"><span>☕</span> قهوة </div>  
+ <div class="category" onclick="filterCategory('هدايا')"><span>🎁</span> هدايا </div> 
+<div class="category" onclick="filterCategory('متاجر')"><span>🏪</span> متاجر </div>
+<div class="category" onclick="filterCategory('مشاريع')"><span>🧁</span> مشاريع منزلية </div>
  </div>
 </section>
 
 <section>
  <h2>المتاجر</h2>
  <div class="stores" id="stores">
-  <div class="store"><strong>متجرك الأول</strong><p>سيظهر هنا بعد إضافته من الإدارة</p></div>
-  <div class="store"><strong>متجرك الثاني</strong><p>سيظهر هنا بعد إضافته من الإدارة</p></div>
+<div class="store" data-category="مطاعم"><strong>متجرك الأول</strong>
+<div class="store" data-category="بقالة"><strong>متجرك الثاني</strong>   الإدارة</p></div>
  </div>
  <p class="note">هذه نسخة أولية تجريبية. المتاجر والطلبات وتسجيل الدخول ستُربط لاحقًا بقاعدة بيانات حقيقية.</p>
 </section>
@@ -84,6 +84,15 @@ function searchStores(){
   stores.forEach(store => {
     let text = store.innerText.toLowerCase();
     store.style.display = text.includes(value) ? 'block' : 'none';
+  });
+function filterCategory(cat){
+  let stores = document.querySelectorAll('.store');
+  stores.forEach(s => {
+    if(cat === 'الكل' || s.getAttribute('data-category') === cat){
+      s.style.display = 'block';
+    } else {
+      s.style.display = 'none';
+    }
   });
 }
 </script>
