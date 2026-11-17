@@ -31,13 +31,12 @@ input,select{padding:12px;width:92%;border-radius:10px;border:1px solid #ccc;mar
 <h1>دَرْب | DARB</h1>
 <p>اطلب من أفضل المتاجر</p>
 <input id="search" placeholder="ابحث عن متجر..." onkeyup="searchStores()">
-<!-- تسجيل الدخول -->
 <div id="loginBox" style="background:white; color:#333; padding:12px; border-radius:12px; margin-top:12px; text-align:right;">
   <div id="loginForm">
     <b>👤 تسجيل الدخول</b><br>
     <span style="font-size:12px; color:#888;">سجلي دخولج عشان نعرفج ونسهل عليج الطلب</span><br><br>
-    <input id="loginName" type="text" placeholder="الاسم الثلاثي - مثال: مريم محمد البلوشية" style="width:100%;">
-    <input id="loginPhone" type="text" placeholder="رقم الهاتف - مثال: 94116067" style="width:100%;">
+    <input id="loginName" type="text" placeholder="كتابة الاسم الثلاثي .." style="width:100%;">
+    <input id="loginPhone" type="text" placeholder="رقم الهاتف" style="width:100%;">
     <button onclick="doLogin()" style="width:100%; background:#1e3a2f;">دخول ✅</button>
     <p style="font-size:12px; color:#c62828; text-align:center;">* يجب كتابة الاسم الثلاثي</p>
   </div>
@@ -65,7 +64,6 @@ input,select{padding:12px;width:92%;border-radius:10px;border:1px solid #ccc;mar
 <button class="cat-btn" onclick="filterCat('بقالات',this)">بقالات</button>
 <button class="cat-btn" onclick="filterCat('مشاريع منزلية',this)">مشاريع منزلية</button>
 <button class="cat-btn" onclick="filterCat('حلويات',this)">حلويات</button>
-
 <div id="stores">
 <div class="store" data-category="مشاريع منزلية" onclick="openStore('Maith')">
 <strong>متجر ميث - Maith</strong>
@@ -113,12 +111,9 @@ input,select{padding:12px;width:92%;border-radius:10px;border:1px solid #ccc;mar
 <button onclick="addToCart('المقشر الكريمي',3.9,'qty3')">أضف للسلة</button>
 </div>
 
-<!-- 🛒 سلة المنتجات -->
 <div style="background:white; padding:15px; border-radius:15px; margin:15px; text-align:right; direction:rtl;">
   <h3 style="margin:0 0 12px 0;">🛒 سلة المنتجات</h3>
-  <div id="cartItems">
-    <p style="color:#888; text-align:center;">السلة فاضية، أضيفي منتجات من فوق 👆</p>
-  </div>
+  <div id="cartItems"><p style="color:#888; text-align:center;">السلة فاضية، أضيفي منتجات من فوق 👆</p></div>
   <div id="cartTotal" style="display:none;">
     <div class="summary-row"><span>المجموع الفرعي:</span><span id="subTotalPrice">0.000 ر.ع</span></div>
     <div class="summary-row"><span>ضريبة القيمة المضافة (5%):</span><span id="vatPrice">0.000 ر.ع</span></div>
@@ -127,7 +122,6 @@ input,select{padding:12px;width:92%;border-radius:10px;border:1px solid #ccc;mar
   </div>
 </div>
 
-<!-- طريقة الدفع -->
 <div style="background:white; padding:15px; border-radius:15px; margin:15px; text-align:right; direction:rtl;">
   <h3 style="display:flex; justify-content:space-between; align-items:center; margin:0 0 15px 0;">الدفع <span style="background:#4CAF50; color:white; border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; font-size:14px;">✓</span></h3>
   <label style="display:flex; justify-content:space-between; align-items:center; border:1px solid #ddd; padding:14px; border-radius:12px; margin-bottom:10px; cursor:pointer;">
@@ -142,33 +136,19 @@ input,select{padding:12px;width:92%;border-radius:10px;border:1px solid #ccc;mar
     <span>💵 الدفع عند الاستلام</span>
     <input type="radio" name="payment" value="الدفع عند الاستلام" id="payCashRadio" checked style="width:20px; height:20px;" onclick="showPayInfo('cash')">
   </label>
-
   <div id="pay-bank" style="display:none; background:#f0f7f2; padding:12px; border-radius:10px; margin-top:10px; font-size:14px;">
-    <b>💳 التحويل البنكي:</b><br>
-    حولي المبلغ على الحساب التالي وارسلي لنا صورة التحويل<br>
-    <b>اسم البنك:</b> اكتبي اسم البنك هنا<br>
-    <b>رقم الحساب:</b> اكتبي رقم الحساب هنا
+    <b>💳 التحويل البنكي:</b><br>حولي المبلغ على الحساب التالي وارسلي لنا صورة التحويل<br><b>اسم البنك:</b> اكتبي اسم البنك هنا<br><b>رقم الحساب:</b> اكتبي رقم الحساب هنا
   </div>
-
   <div id="pay-phonePay" style="display:none; background:#fff8e1; padding:12px; border-radius:10px; margin-top:10px; font-size:14px;">
-    <b>📱 الدفع عن طريق رقم الهاتف:</b><br>
-    حولي المبلغ على هذا الرقم:<br>
-    <b style="font-size:18px;">94116067</b><br>
-    وبعد التحويل ارسلي لنا صورة التحويل
+    <b>📱 الدفع عن طريق رقم الهاتف:</b><br>حولي المبلغ على هذا الرقم:<br><b style="font-size:18px;">94116067</b><br>وبعد التحويل ارسلي لنا صورة التحويل
   </div>
-
-  <div id="pay-cash" style="display:block; background:#f9f9f9; padding:12px; border-radius:10px; margin-top:10px; font-size:14px;">
-    💵 ادفعي عند استلام طلبج
-  </div>
-
+  <div id="pay-cash" style="display:block; background:#f9f9f9; padding:12px; border-radius:10px; margin-top:10px; font-size:14px;">💵 ادفعي عند استلام طلبج</div>
   <button class="pay-action-btn" onclick="confirmPaid()" style="background:#4CAF50;">✅ تم دفع المبلغ</button>
   <button class="pay-action-btn" onclick="payAfterDelivery()" style="background:#ff9800;">📦 الدفع بعد استلام الطلب</button>
   <div id="payConfirmMsg" style="display:none; text-align:center; padding:10px; border-radius:10px; margin-top:10px; font-weight:bold;"></div>
-
   <p style="font-size:12px; color:#888; text-align:center; margin-top:12px;">آمن ومشفر | بالمتابعة توافق على شروط الخدمة</p>
 </div>
 
-<!-- 🚚 نوع الشحن -->
 <div style="background:white; padding:15px; border-radius:15px; margin:15px; text-align:right; direction:rtl;">
   <h3 style="margin:0 0 12px 0;">🚚 نوع الشحن</h3>
   <label style="display:flex; justify-content:space-between; align-items:center; border:1px solid #ddd; padding:14px; border-radius:12px; margin-bottom:10px; cursor:pointer;">
@@ -181,34 +161,19 @@ input,select{padding:12px;width:92%;border-radius:10px;border:1px solid #ccc;mar
   </label>
 </div>
 
-<!-- 👤 بيانات الزبون + عنوان التوصيل -->
 <div style="background:white; padding:15px; border-radius:15px; margin:15px; text-align:right; direction:rtl;">
   <h3 style="margin:0 0 12px 0;">👤 بيانات الزبون</h3>
   <label>الاسم الثلاثي *</label>
-  <input id="customerName" type="text" placeholder="مثال: مريم محمد البلوشية">
+  <input id="customerName" type="text" placeholder="كتابة الاسم الثلاثي ..">
   <span style="font-size:12px; color:#c62828;">* يجب كتابة الاسم الثلاثي كاملاً</span><br><br>
   <label>رقم هاتف الزبونة *</label>
-  <input id="phone" type="text" placeholder="مثال: 94116067">
+  <input id="phone" type="text" placeholder="رقم الهاتف">
   <h3 style="margin:15px 0 12px 0;">📍 عنوان التوصيل</h3>
   <label>البلد</label>
-  <select id="country">
-    <option>عُمان</option>
-    <option>الإمارات</option>
-    <option>السعودية</option>
-  </select>
+  <select id="country"><option>عُمان</option><option>الإمارات</option><option>السعودية</option></select>
   <label>المحافظة</label>
   <select id="governorate" onchange="updateWilaya()">
-    <option>مسقط</option>
-    <option>ظفار</option>
-    <option>مسندم</option>
-    <option>البريمي</option>
-    <option>شمال الباطنة</option>
-    <option>جنوب الباطنة</option>
-    <option>الداخلية</option>
-    <option>شمال الشرقية</option>
-    <option>جنوب الشرقية</option>
-    <option>الظاهرة</option>
-    <option>الوسطى</option>
+    <option>مسقط</option><option>ظفار</option><option>مسندم</option><option>البريمي</option><option>شمال الباطنة</option><option>جنوب الباطنة</option><option>الداخلية</option><option>شمال الشرقية</option><option>جنوب الشرقية</option><option>الظاهرة</option><option>الوسطى</option>
   </select>
   <label>الولاية</label>
   <select id="wilaya"></select>
@@ -216,7 +181,6 @@ input,select{padding:12px;width:92%;border-radius:10px;border:1px solid #ccc;mar
   <input id="area" type="text" placeholder="مثال: الخوض، الموالح، العذيبة">
 </div>
 
-<!-- زر إرسال الطلب -->
 <div style="margin:20px 15px 30px 15px;">
   <button onclick="orderNow()" style="width:100%; padding:18px; font-size:20px; font-weight:bold; background:#25D366; border-radius:15px;">💬 إرسال الطلب عبر واتساب</button>
   <p style="font-size:13px; color:#888;">بالضغط على إرسال الطلب، سينفتح واتساب ويرسل طلبك لمتجر ميث</p>
@@ -224,10 +188,7 @@ input,select{padding:12px;width:92%;border-radius:10px;border:1px solid #ccc;mar
 
 </div>
 
-<footer>
-<p><b>دَرْب | DARB</b></p>
-<p>سلطنة عُمان</p>
-</footer>
+<footer><p><b>دَرْب | DARB</b></p><p>سلطنة عُمان</p></footer>
 
 <script>
 let cart = [];
@@ -245,11 +206,7 @@ const wilayasByGov = {
 "الظاهرة":["عبري","ينقل","ضنك"],
 "الوسطى":["هيما","محوت","الدقم","الجازر"]
 };
-function isTripleName(name){
-let parts = name.trim().split(/\s+/);
-return parts.length >= 3 && parts.every(p => p.length >= 2);
-}
-// تسجيل الدخول
+function isTripleName(name){let parts = name.trim().split(/\s+/);return parts.length >= 3 && parts.every(p => p.length >= 2);}
 function checkLogin(){
 let n = localStorage.getItem('darb_name');
 let p = localStorage.getItem('darb_phone');
@@ -282,138 +239,22 @@ document.getElementById('customerName').value='';
 document.getElementById('phone').value='';
 }
 checkLogin();
-function getShipping(){
-let s = document.querySelector('input[name="shipping"]:checked');
-if(!s) return 2;
-return s.value === 'للمكتب' ? 1 : 2;
-}
-function getTotals(){
-let sub = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
-let vat = sub * 0.05;
-let ship = cart.length==0 ? 0 : getShipping();
-let total = sub + vat + ship;
-return {sub:sub, vat:vat, ship:ship, total:total};
-}
-function updateWilaya(){
-let gov = document.getElementById('governorate').value;
-let w = document.getElementById('wilaya');
-w.innerHTML = '';
-wilayasByGov[gov].forEach(x=>{
-let o = document.createElement('option'); o.text = x; w.add(o);
-});
-}
+function getShipping(){let s = document.querySelector('input[name="shipping"]:checked');if(!s) return 2;return s.value === 'للمكتب' ? 1 : 2;}
+function getTotals(){let sub = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);let vat = sub * 0.05;let ship = cart.length==0 ? 0 : getShipping();let total = sub + vat + ship;return {sub:sub, vat:vat, ship:ship, total:total};}
+function updateWilaya(){let gov = document.getElementById('governorate').value;let w = document.getElementById('wilaya');w.innerHTML = '';wilayasByGov[gov].forEach(x=>{let o = document.createElement('option'); o.text = x; w.add(o);});}
 updateWilaya();
-function showPayInfo(type){
-document.getElementById('pay-bank').style.display = type=='bank' ? 'block' : 'none';
-document.getElementById('pay-phonePay').style.display = type=='phonePay' ? 'block' : 'none';
-document.getElementById('pay-cash').style.display = type=='cash' ? 'block' : 'none';
-}
-function confirmPaid(){
-document.getElementById('payPhoneRadio').checked = true;
-showPayInfo('phonePay');
-payStatus = 'تم دفع المبلغ ✅';
-let m = document.getElementById('payConfirmMsg');
-m.style.display = 'block';
-m.style.background = '#e8f5e9';
-m.style.color = '#2e7d32';
-m.innerText = '✅ تم تأكيد دفع المبلغ، شكراً لك! كملي طلبك بالضغط على إرسال الطلب بالأسفل';
-}
-function payAfterDelivery(){
-document.getElementById('payCashRadio').checked = true;
-showPayInfo('cash');
-payStatus = 'الدفع بعد استلام الطلب 📦';
-let m = document.getElementById('payConfirmMsg');
-m.style.display = 'block';
-m.style.background = '#fff3e0';
-m.style.color = '#e65100';
-m.innerText = '📦 تم اختيار الدفع بعد استلام الطلب، كملي طلبك بالضغط على إرسال الطلب بالأسفل';
-}
-function filterCat(cat, btn){
-document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
-btn.classList.add('active');
-document.querySelectorAll('#stores .store').forEach(s=>{
-if(cat=='الكل' || s.getAttribute('data-category')==cat){ s.style.display='block'; } else { s.style.display='none'; }
-});
-}
-function openStore(name){
-document.getElementById('home').style.display='none';
-document.getElementById('store-'+name).style.display='block';
-window.scrollTo(0,0);
-}
-function backToStores(){
-document.getElementById('home').style.display='block';
-document.getElementById('store-Maith').style.display='none';
-}
-function changeQty(id, change){
-let el = document.getElementById(id);
-let val = parseInt(el.innerText) + change;
-if(val < 1) val = 1;
-if(val > 99) val = 99;
-el.innerText = val;
-}
-function addToCart(name, price, qtyId){
-let qty = parseInt(document.getElementById(qtyId).innerText);
-cart.push({name:name, price:price, qty:qty});
-updateCartDisplay();
-alert('تمت إضافة ' + qty + ' × ' + name + ' للسلة');
-document.getElementById(qtyId).innerText = '1';
-}
-function updateCartDisplay(){
-let totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
-document.getElementById('cartCount').innerText = totalQty;
-let box = document.getElementById('cartItems');
-let totalBox = document.getElementById('cartTotal');
-if(cart.length==0){
-box.innerHTML = '<p style="color:#888; text-align:center;">السلة فاضية، أضيفي منتجات من فوق 👆</p>';
-totalBox.style.display = 'none';
-return;
-}
-let html = '';
-cart.forEach((item, index)=>{
-html += '<div class="cart-item"><div><b>' + item.name + '</b><br><span style="color:#888; font-size:13px;">' + item.qty + ' × ' + item.price.toFixed(3) + ' ر.ع</span></div><div><b>' + (item.price * item.qty).toFixed(3) + ' ر.ع</b><br><button onclick="removeItem(' + index + ')" style="background:#c62828; padding:5px 10px; font-size:12px;">حذف ❌</button></div></div>';
-});
-box.innerHTML = html;
-let t = getTotals();
-document.getElementById('subTotalPrice').innerText = t.sub.toFixed(3) + ' ر.ع';
-document.getElementById('vatPrice').innerText = t.vat.toFixed(3) + ' ر.ع';
-document.getElementById('shippingPrice').innerText = t.ship.toFixed(3) + ' ر.ع';
-document.getElementById('totalPrice').innerText = t.total.toFixed(3) + ' ر.ع';
-totalBox.style.display = 'block';
-}
-function removeItem(index){
-cart.splice(index,1);
-updateCartDisplay();
-}
-function orderNow(){
-if(cart.length==0){ alert('السلة فاضية'); return; }
-let custName = document.getElementById('customerName').value.trim();
-let phone = document.getElementById('phone').value.trim();
-if(!custName){ alert('اكتبي اسمج الثلاثي لو سمحتي'); return; }
-if(!isTripleName(custName)){ alert('⚠️ يجب كتابة الاسم الثلاثي كاملاً\nمثال: مريم محمد البلوشية'); return; }
-if(!phone){ alert('اكتبي رقم هاتفج لو سمحتي'); return; }
-let pay = document.querySelector('input[name="payment"]:checked').value;
-let shipType = document.querySelector('input[name="shipping"]:checked').value;
-let country = document.getElementById('country').value;
-let gov = document.getElementById('governorate').value;
-let wilaya = document.getElementById('wilaya').value;
-let area = document.getElementById('area').value;
-if(!area){ alert('اكتبي المنطقة لو سمحتي'); return; }
-let items = cart.map(i => i.qty + ' × ' + i.name + ' : ' + (i.price * i.qty).toFixed(3) + ' ر.ع').join('\n');
-let t = getTotals();
-let msg = '🛍️ طلب جديد من متجر ميث - DARB\n\n👤 الاسم الثلاثي: ' + custName + '\n📞 رقم هاتف الزبونة: ' + phone + '\n\n' + items + '\n\nالمجموع الفرعي: ' + t.sub.toFixed(3) + ' ر.ع\nضريبة القيمة المضافة (5%): ' + t.vat.toFixed(3) + ' ر.ع\n🚚 نوع الشحن: ' + shipType + '\n🚚 قيمة الشحن: ' + t.ship.toFixed(3) + ' ر.ع\nالمجموع الكلي: ' + t.total.toFixed(3) + ' ر.ع\n\nطريقة الدفع: ' + pay + '\nحالة الدفع: ' + payStatus + '\n\n📍 عنوان التوصيل:\nالبلد: ' + country + '\nالمحافظة: ' + gov + '\nالولاية: ' + wilaya + '\nالمنطقة: ' + area;
-let url = 'https://wa.me/96894116067?text=' + encodeURIComponent(msg);
-window.open(url, '_blank');
-cart = [];
-updateCartDisplay();
-document.getElementById('successMsg').style.display = 'block';
-window.scrollTo(0,0);
-}
-function searchStores(){
-let v = document.getElementById('search').value;
-document.querySelectorAll('#stores .store').forEach(s=>{
-s.style.display = s.innerText.includes(v) ? 'block' : 'none';
-});
-}
+function showPayInfo(type){document.getElementById('pay-bank').style.display = type=='bank' ? 'block' : 'none';document.getElementById('pay-phonePay').style.display = type=='phonePay' ? 'block' : 'none';document.getElementById('pay-cash').style.display = type=='cash' ? 'block' : 'none';}
+function confirmPaid(){document.getElementById('payPhoneRadio').checked = true;showPayInfo('phonePay');payStatus = 'تم دفع المبلغ ✅';let m = document.getElementById('payConfirmMsg');m.style.display = 'block';m.style.background = '#e8f5e9';m.style.color = '#2e7d32';m.innerText = '✅ تم تأكيد دفع المبلغ، شكراً لك! كملي طلبك بالضغط على إرسال الطلب بالأسفل';}
+function payAfterDelivery(){document.getElementById('payCashRadio').checked = true;showPayInfo('cash');payStatus = 'الدفع بعد استلام الطلب 📦';let m = document.getElementById('payConfirmMsg');m.style.display = 'block';m.style.background = '#fff3e0';m.style.color = '#e65100';m.innerText = '📦 تم اختيار الدفع بعد استلام الطلب، كملي طلبك بالضغط على إرسال الطلب بالأسفل';}
+function filterCat(cat, btn){document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('#stores .store').forEach(s=>{if(cat=='الكل' || s.getAttribute('data-category')==cat){ s.style.display='block'; } else { s.style.display='none'; }});}
+function openStore(name){document.getElementById('home').style.display='none';document.getElementById('store-'+name).style.display='block';window.scrollTo(0,0);}
+function backToStores(){document.getElementById('home').style.display='block';document.getElementById('store-Maith').style.display='none';}
+function changeQty(id, change){let el = document.getElementById(id);let val = parseInt(el.innerText) + change;if(val < 1) val = 1;if(val > 99) val = 99;el.innerText = val;}
+function addToCart(name, price, qtyId){let qty = parseInt(document.getElementById(qtyId).innerText);cart.push({name:name, price:price, qty:qty});updateCartDisplay();alert('تمت إضافة ' + qty + ' × ' + name + ' للسلة');document.getElementById(qtyId).innerText = '1';}
+function updateCartDisplay(){let totalQty = cart.reduce((sum, item) => sum + item.qty, 0);document.getElementById('cartCount').innerText = totalQty;let box = document.getElementById('cartItems');let totalBox = document.getElementById('cartTotal');if(cart.length==0){box.innerHTML = '<p style="color:#888; text-align:center;">السلة فاضية، أضيفي منتجات من فوق 👆</p>';totalBox.style.display = 'none';return;}let html = '';cart.forEach((item, index)=>{html += '<div class="cart-item"><div><b>' + item.name + '</b><br><span style="color:#888; font-size:13px;">' + item.qty + ' × ' + item.price.toFixed(3) + ' ر.ع</span></div><div><b>' + (item.price * item.qty).toFixed(3) + ' ر.ع</b><br><button onclick="removeItem(' + index + ')" style="background:#c62828; padding:5px 10px; font-size:12px;">حذف ❌</button></div></div>';});box.innerHTML = html;let t = getTotals();document.getElementById('subTotalPrice').innerText = t.sub.toFixed(3) + ' ر.ع';document.getElementById('vatPrice').innerText = t.vat.toFixed(3) + ' ر.ع';document.getElementById('shippingPrice').innerText = t.ship.toFixed(3) + ' ر.ع';document.getElementById('totalPrice').innerText = t.total.toFixed(3) + ' ر.ع';totalBox.style.display = 'block';}
+function removeItem(index){cart.splice(index,1);updateCartDisplay();}
+function orderNow(){if(cart.length==0){ alert('السلة فاضية'); return; }let custName = document.getElementById('customerName').value.trim();let phone = document.getElementById('phone').value.trim();if(!custName){ alert('اكتبي اسمج الثلاثي لو سمحتي'); return; }if(!isTripleName(custName)){ alert('⚠️ يجب كتابة الاسم الثلاثي كاملاً\nمثال: مريم محمد البلوشية'); return; }if(!phone){ alert('اكتبي رقم هاتفج لو سمحتي'); return; }let pay = document.querySelector('input[name="payment"]:checked').value;let shipType = document.querySelector('input[name="shipping"]:checked').value;let country = document.getElementById('country').value;let gov = document.getElementById('governorate').value;let wilaya = document.getElementById('wilaya').value;let area = document.getElementById('area').value;if(!area){ alert('اكتبي المنطقة لو سمحتي'); return; }let items = cart.map(i => i.qty + ' × ' + i.name + ' : ' + (i.price * i.qty).toFixed(3) + ' ر.ع').join('\n');let t = getTotals();let msg = '🛍️ طلب جديد من متجر ميث - DARB\n\n👤 الاسم الثلاثي: ' + custName + '\n📞 رقم هاتف الزبونة: ' + phone + '\n\n' + items + '\n\nالمجموع الفرعي: ' + t.sub.toFixed(3) + ' ر.ع\nضريبة القيمة المضافة (5%): ' + t.vat.toFixed(3) + ' ر.ع\n🚚 نوع الشحن: ' + shipType + '\n🚚 قيمة الشحن: ' + t.ship.toFixed(3) + ' ر.ع\nالمجموع الكلي: ' + t.total.toFixed(3) + ' ر.ع\n\nطريقة الدفع: ' + pay + '\nحالة الدفع: ' + payStatus + '\n\n📍 عنوان التوصيل:\nالبلد: ' + country + '\nالمحافظة: ' + gov + '\nالولاية: ' + wilaya + '\nالمنطقة: ' + area;let url = 'https://wa.me/96894116067?text=' + encodeURIComponent(msg);window.open(url, '_blank');cart = [];updateCartDisplay();document.getElementById('successMsg').style.display = 'block';window.scrollTo(0,0);}
+function searchStores(){let v = document.getElementById('search').value;document.querySelectorAll('#stores .store').forEach(s=>{s.style.display = s.innerText.includes(v) ? 'block' : 'none';});}
 </script>
 </body>
 </html>
