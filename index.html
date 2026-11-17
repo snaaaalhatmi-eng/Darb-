@@ -74,11 +74,17 @@ footer{text-align:center;padding:28px;background:#354b39;color:white;line-height
  وادي بني غافر – سلطنة عُمان
 </footer>
 
-<script>
 function searchStores(){
- const value=document.getElementById('search').value.trim();
- if(!value){alert('اكتبي اسم المتجر أو القسم أولًا');return;}
- alert('سيتم تفعيل البحث عن '+value+' في المرحلة القادمة');
+  let value = document.getElementById('search').value.trim().toLowerCase();
+  let stores = document.querySelectorAll('.store');
+  if(!value){
+    stores.forEach(s => s.style.display = 'block');
+    return;
+  }
+  stores.forEach(store => {
+    let text = store.innerText.toLowerCase();
+    store.style.display = text.includes(value) ? 'block' : 'none';
+  });
 }
 </script>
 </body>
