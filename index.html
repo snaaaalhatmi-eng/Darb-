@@ -97,6 +97,20 @@ function filterCategory(cat){
     }
   });
 }
+fetch('stores.json')
+  .then(r => r.json())
+  .then(data => {
+    let box = document.getElementById('stores');
+    box.innerHTML = '';
+    data.forEach(s => {
+      box.innerHTML += `
+      <div class="store" data-category="${s.category}">
+        <strong>${s.name}</strong>
+        <p>${s.product} - ${s.price}</p>
+        <a href="https://wa.me/${s.whatsapp}" target="_blank"><button>أضف للسلة</button></a>
+      </div>`;
+    });
+  });  });
 </script>
 </body>
 </html>
