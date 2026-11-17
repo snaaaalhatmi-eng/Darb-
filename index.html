@@ -20,6 +20,9 @@ input,select{padding:12px;width:92%;border-radius:10px;border:1px solid #ccc;mar
 .qty-btn{width:40px;height:40px;font-size:22px;padding:0;background:#1e3a2f;border-radius:50%}
 .qty-num{font-size:20px;font-weight:bold;min-width:30px}
 .cart-item{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #eee;padding:10px 0;text-align:right}
+.pay-action-btn{width:100%;padding:14px;font-size:16px;font-weight:bold;border-radius:12px;margin-top:10px}
+.summary-row{display:flex;justify-content:space-between;padding:6px 0;font-size:15px}
+.summary-total{display:flex;justify-content:space-between;border-top:2px solid #1e3a2f;padding-top:10px;margin-top:10px;font-weight:bold;font-size:18px}
 </style>
 </head>
 <body>
@@ -28,10 +31,26 @@ input,select{padding:12px;width:92%;border-radius:10px;border:1px solid #ccc;mar
 <h1>دَرْب | DARB</h1>
 <p>اطلب من أفضل المتاجر</p>
 <input id="search" placeholder="ابحث عن متجر..." onkeyup="searchStores()">
+<!-- تسجيل الدخول -->
+<div id="loginBox" style="background:white; color:#333; padding:12px; border-radius:12px; margin-top:12px; text-align:right;">
+  <div id="loginForm">
+    <b>👤 تسجيل الدخول</b><br>
+    <span style="font-size:12px; color:#888;">سجلي دخولج عشان نعرفج ونسهل عليج الطلب</span><br><br>
+    <input id="loginName" type="text" placeholder="الاسم الثلاثي - مثال: مريم محمد البلوشية" style="width:100%;">
+    <input id="loginPhone" type="text" placeholder="رقم الهاتف - مثال: 94116067" style="width:100%;">
+    <button onclick="doLogin()" style="width:100%; background:#1e3a2f;">دخول ✅</button>
+    <p style="font-size:12px; color:#c62828; text-align:center;">* يجب كتابة الاسم الثلاثي</p>
+  </div>
+  <div id="welcomeBox" style="display:none; text-align:center;">
+    <b>أهلاً <span id="welcomeName"></span> 👋</b><br>
+    <span style="font-size:13px; color:#888;" id="welcomePhone"></span><br>
+    <button onclick="doLogout()" style="background:#c62828; padding:6px 14px; font-size:13px;">تسجيل خروج</button>
+  </div>
+</div>
 </header>
 
 <div id="successMsg" style="display:none; background:#e8f5e9; padding:20px; border-radius:15px; margin:15px; text-align:center; font-size:18px; font-weight:bold; border:1px solid #a5d6a7;">
-  تم استلام طلبك بنجاح سنتواصل معكم قريباً ❤️
+  تم فتح واتساب، ارسلي الطلب لميث ❤️
 </div>
 
 <div class="cart-bar">
@@ -100,13 +119,15 @@ input,select{padding:12px;width:92%;border-radius:10px;border:1px solid #ccc;mar
   <div id="cartItems">
     <p style="color:#888; text-align:center;">السلة فاضية، أضيفي منتجات من فوق 👆</p>
   </div>
-  <div id="cartTotal" style="display:none; border-top:2px solid #1e3a2f; padding-top:10px; margin-top:10px; font-weight:bold; font-size:18px; display:flex; justify-content:space-between;">
-    <span>المجموع الكلي:</span>
-    <span id="totalPrice">0.000 ر.ع</span>
+  <div id="cartTotal" style="display:none;">
+    <div class="summary-row"><span>المجموع الفرعي:</span><span id="subTotalPrice">0.000 ر.ع</span></div>
+    <div class="summary-row"><span>ضريبة القيمة المضافة (5%):</span><span id="vatPrice">0.000 ر.ع</span></div>
+    <div class="summary-row"><span>🚚 قيمة الشحن:</span><span id="shippingPrice">2.000 ر.ع</span></div>
+    <div class="summary-total"><span>المجموع الكلي:</span><span id="totalPrice">0.000 ر.ع</span></div>
   </div>
 </div>
 
-<!-- طريقة الدفع - 3 خيارات -->
+<!-- طريقة الدفع -->
 <div style="background:white; padding:15px; border-radius:15px; margin:15px; text-align:right; direction:rtl;">
   <h3 style="display:flex; justify-content:space-between; align-items:center; margin:0 0 15px 0;">الدفع <span style="background:#4CAF50; color:white; border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; font-size:14px;">✓</span></h3>
   <label style="display:flex; justify-content:space-between; align-items:center; border:1px solid #ddd; padding:14px; border-radius:12px; margin-bottom:10px; cursor:pointer;">
@@ -115,11 +136,11 @@ input,select{padding:12px;width:92%;border-radius:10px;border:1px solid #ccc;mar
   </label>
   <label style="display:flex; justify-content:space-between; align-items:center; border:1px solid #ddd; padding:14px; border-radius:12px; margin-bottom:10px; cursor:pointer;">
     <span>📱 الدفع عن طريق رقم الهاتف</span>
-    <input type="radio" name="payment" value="الدفع عن طريق رقم الهاتف" style="width:20px; height:20px;" onclick="showPayInfo('phonePay')">
+    <input type="radio" name="payment" value="الدفع عن طريق رقم الهاتف" id="payPhoneRadio" style="width:20px; height:20px;" onclick="showPayInfo('phonePay')">
   </label>
   <label style="display:flex; justify-content:space-between; align-items:center; border:1px solid #ddd; padding:14px; border-radius:12px; cursor:pointer;">
     <span>💵 الدفع عند الاستلام</span>
-    <input type="radio" name="payment" value="الدفع عند الاستلام" checked style="width:20px; height:20px;" onclick="showPayInfo('cash')">
+    <input type="radio" name="payment" value="الدفع عند الاستلام" id="payCashRadio" checked style="width:20px; height:20px;" onclick="showPayInfo('cash')">
   </label>
 
   <div id="pay-bank" style="display:none; background:#f0f7f2; padding:12px; border-radius:10px; margin-top:10px; font-size:14px;">
@@ -132,7 +153,7 @@ input,select{padding:12px;width:92%;border-radius:10px;border:1px solid #ccc;mar
   <div id="pay-phonePay" style="display:none; background:#fff8e1; padding:12px; border-radius:10px; margin-top:10px; font-size:14px;">
     <b>📱 الدفع عن طريق رقم الهاتف:</b><br>
     حولي المبلغ على هذا الرقم:<br>
-    <b style="font-size:18px;">91234567</b><br>
+    <b style="font-size:18px;">94116067</b><br>
     وبعد التحويل ارسلي لنا صورة التحويل
   </div>
 
@@ -140,12 +161,35 @@ input,select{padding:12px;width:92%;border-radius:10px;border:1px solid #ccc;mar
     💵 ادفعي عند استلام طلبج
   </div>
 
+  <button class="pay-action-btn" onclick="confirmPaid()" style="background:#4CAF50;">✅ تم دفع المبلغ</button>
+  <button class="pay-action-btn" onclick="payAfterDelivery()" style="background:#ff9800;">📦 الدفع بعد استلام الطلب</button>
+  <div id="payConfirmMsg" style="display:none; text-align:center; padding:10px; border-radius:10px; margin-top:10px; font-weight:bold;"></div>
+
   <p style="font-size:12px; color:#888; text-align:center; margin-top:12px;">آمن ومشفر | بالمتابعة توافق على شروط الخدمة</p>
 </div>
 
-<!-- عنوان التوصيل -->
+<!-- 🚚 نوع الشحن -->
 <div style="background:white; padding:15px; border-radius:15px; margin:15px; text-align:right; direction:rtl;">
-  <h3 style="margin:0 0 12px 0;">📍 عنوان التوصيل</h3>
+  <h3 style="margin:0 0 12px 0;">🚚 نوع الشحن</h3>
+  <label style="display:flex; justify-content:space-between; align-items:center; border:1px solid #ddd; padding:14px; border-radius:12px; margin-bottom:10px; cursor:pointer;">
+    <span>🏠 الشحن للمنزل - 2.000 ر.ع</span>
+    <input type="radio" name="shipping" value="للمنزل" checked style="width:20px; height:20px;" onchange="updateCartDisplay()">
+  </label>
+  <label style="display:flex; justify-content:space-between; align-items:center; border:1px solid #ddd; padding:14px; border-radius:12px; cursor:pointer;">
+    <span>🏢 الشحن للمكتب - 1.000 ر.ع</span>
+    <input type="radio" name="shipping" value="للمكتب" style="width:20px; height:20px;" onchange="updateCartDisplay()">
+  </label>
+</div>
+
+<!-- 👤 بيانات الزبون + عنوان التوصيل -->
+<div style="background:white; padding:15px; border-radius:15px; margin:15px; text-align:right; direction:rtl;">
+  <h3 style="margin:0 0 12px 0;">👤 بيانات الزبون</h3>
+  <label>الاسم الثلاثي *</label>
+  <input id="customerName" type="text" placeholder="مثال: مريم محمد البلوشية">
+  <span style="font-size:12px; color:#c62828;">* يجب كتابة الاسم الثلاثي كاملاً</span><br><br>
+  <label>رقم هاتف الزبونة *</label>
+  <input id="phone" type="text" placeholder="مثال: 94116067">
+  <h3 style="margin:15px 0 12px 0;">📍 عنوان التوصيل</h3>
   <label>البلد</label>
   <select id="country">
     <option>عُمان</option>
@@ -170,14 +214,12 @@ input,select{padding:12px;width:92%;border-radius:10px;border:1px solid #ccc;mar
   <select id="wilaya"></select>
   <label>المنطقة / الحي</label>
   <input id="area" type="text" placeholder="مثال: الخوض، الموالح، العذيبة">
-  <label>رقم الهاتف</label>
-  <input id="phone" type="text" placeholder="مثال: 91234567">
 </div>
 
-<!-- زر إرسال الطلب في نهاية الصفحة -->
+<!-- زر إرسال الطلب -->
 <div style="margin:20px 15px 30px 15px;">
-  <button onclick="orderNow()" style="width:100%; padding:18px; font-size:20px; font-weight:bold; background:#1e3a2f; border-radius:15px;">✅ إرسال الطلب</button>
-  <p style="font-size:13px; color:#888;">بالضغط على إرسال الطلب، سيتم إرسال طلبك لمتجر ميث</p>
+  <button onclick="orderNow()" style="width:100%; padding:18px; font-size:20px; font-weight:bold; background:#25D366; border-radius:15px;">💬 إرسال الطلب عبر واتساب</button>
+  <p style="font-size:13px; color:#888;">بالضغط على إرسال الطلب، سينفتح واتساب ويرسل طلبك لمتجر ميث</p>
 </div>
 
 </div>
@@ -189,6 +231,7 @@ input,select{padding:12px;width:92%;border-radius:10px;border:1px solid #ccc;mar
 
 <script>
 let cart = [];
+let payStatus = 'لم يتم تحديد حالة الدفع';
 const wilayasByGov = {
 "مسقط":["مسقط","السيب","بوشر","مطرح","العامرات","قريات"],
 "ظفار":["صلالة","طاقة","مرباط","سدح","رخيوت","ضلكوت","مقشن","شليم وجزر الحلانيات","ثمريت","المزيونة"],
@@ -202,6 +245,55 @@ const wilayasByGov = {
 "الظاهرة":["عبري","ينقل","ضنك"],
 "الوسطى":["هيما","محوت","الدقم","الجازر"]
 };
+function isTripleName(name){
+let parts = name.trim().split(/\s+/);
+return parts.length >= 3 && parts.every(p => p.length >= 2);
+}
+// تسجيل الدخول
+function checkLogin(){
+let n = localStorage.getItem('darb_name');
+let p = localStorage.getItem('darb_phone');
+if(n && p){
+document.getElementById('loginForm').style.display='none';
+document.getElementById('welcomeBox').style.display='block';
+document.getElementById('welcomeName').innerText = n;
+document.getElementById('welcomePhone').innerText = p;
+document.getElementById('customerName').value = n;
+document.getElementById('phone').value = p;
+}
+}
+function doLogin(){
+let n = document.getElementById('loginName').value.trim();
+let p = document.getElementById('loginPhone').value.trim();
+if(!n){ alert('اكتبي اسمج لو سمحتي'); return; }
+if(!isTripleName(n)){ alert('⚠️ يجب كتابة الاسم الثلاثي كاملاً\nمثال: مريم محمد البلوشية'); return; }
+if(!p){ alert('اكتبي رقم هاتفج لو سمحتي'); return; }
+localStorage.setItem('darb_name', n);
+localStorage.setItem('darb_phone', p);
+checkLogin();
+alert('أهلاً ' + n + ' 👋 تم تسجيل دخولج');
+}
+function doLogout(){
+localStorage.removeItem('darb_name');
+localStorage.removeItem('darb_phone');
+document.getElementById('loginForm').style.display='block';
+document.getElementById('welcomeBox').style.display='none';
+document.getElementById('customerName').value='';
+document.getElementById('phone').value='';
+}
+checkLogin();
+function getShipping(){
+let s = document.querySelector('input[name="shipping"]:checked');
+if(!s) return 2;
+return s.value === 'للمكتب' ? 1 : 2;
+}
+function getTotals(){
+let sub = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+let vat = sub * 0.05;
+let ship = cart.length==0 ? 0 : getShipping();
+let total = sub + vat + ship;
+return {sub:sub, vat:vat, ship:ship, total:total};
+}
 function updateWilaya(){
 let gov = document.getElementById('governorate').value;
 let w = document.getElementById('wilaya');
@@ -215,6 +307,26 @@ function showPayInfo(type){
 document.getElementById('pay-bank').style.display = type=='bank' ? 'block' : 'none';
 document.getElementById('pay-phonePay').style.display = type=='phonePay' ? 'block' : 'none';
 document.getElementById('pay-cash').style.display = type=='cash' ? 'block' : 'none';
+}
+function confirmPaid(){
+document.getElementById('payPhoneRadio').checked = true;
+showPayInfo('phonePay');
+payStatus = 'تم دفع المبلغ ✅';
+let m = document.getElementById('payConfirmMsg');
+m.style.display = 'block';
+m.style.background = '#e8f5e9';
+m.style.color = '#2e7d32';
+m.innerText = '✅ تم تأكيد دفع المبلغ، شكراً لك! كملي طلبك بالضغط على إرسال الطلب بالأسفل';
+}
+function payAfterDelivery(){
+document.getElementById('payCashRadio').checked = true;
+showPayInfo('cash');
+payStatus = 'الدفع بعد استلام الطلب 📦';
+let m = document.getElementById('payConfirmMsg');
+m.style.display = 'block';
+m.style.background = '#fff3e0';
+m.style.color = '#e65100';
+m.innerText = '📦 تم اختيار الدفع بعد استلام الطلب، كملي طلبك بالضغط على إرسال الطلب بالأسفل';
 }
 function filterCat(cat, btn){
 document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
@@ -261,9 +373,12 @@ cart.forEach((item, index)=>{
 html += '<div class="cart-item"><div><b>' + item.name + '</b><br><span style="color:#888; font-size:13px;">' + item.qty + ' × ' + item.price.toFixed(3) + ' ر.ع</span></div><div><b>' + (item.price * item.qty).toFixed(3) + ' ر.ع</b><br><button onclick="removeItem(' + index + ')" style="background:#c62828; padding:5px 10px; font-size:12px;">حذف ❌</button></div></div>';
 });
 box.innerHTML = html;
-let total = cart.reduce((sum, i) => sum + (i.price * i.qty), 0).toFixed(3);
-document.getElementById('totalPrice').innerText = total + ' ر.ع';
-totalBox.style.display = 'flex';
+let t = getTotals();
+document.getElementById('subTotalPrice').innerText = t.sub.toFixed(3) + ' ر.ع';
+document.getElementById('vatPrice').innerText = t.vat.toFixed(3) + ' ر.ع';
+document.getElementById('shippingPrice').innerText = t.ship.toFixed(3) + ' ر.ع';
+document.getElementById('totalPrice').innerText = t.total.toFixed(3) + ' ر.ع';
+totalBox.style.display = 'block';
 }
 function removeItem(index){
 cart.splice(index,1);
@@ -271,30 +386,27 @@ updateCartDisplay();
 }
 function orderNow(){
 if(cart.length==0){ alert('السلة فاضية'); return; }
+let custName = document.getElementById('customerName').value.trim();
+let phone = document.getElementById('phone').value.trim();
+if(!custName){ alert('اكتبي اسمج الثلاثي لو سمحتي'); return; }
+if(!isTripleName(custName)){ alert('⚠️ يجب كتابة الاسم الثلاثي كاملاً\nمثال: مريم محمد البلوشية'); return; }
+if(!phone){ alert('اكتبي رقم هاتفج لو سمحتي'); return; }
 let pay = document.querySelector('input[name="payment"]:checked').value;
+let shipType = document.querySelector('input[name="shipping"]:checked').value;
 let country = document.getElementById('country').value;
 let gov = document.getElementById('governorate').value;
 let wilaya = document.getElementById('wilaya').value;
 let area = document.getElementById('area').value;
-let phone = document.getElementById('phone').value;
 if(!area){ alert('اكتبي المنطقة لو سمحتي'); return; }
 let items = cart.map(i => i.qty + ' × ' + i.name + ' : ' + (i.price * i.qty).toFixed(3) + ' ر.ع').join('\n');
-let total = cart.reduce((sum, i) => sum + (i.price * i.qty), 0).toFixed(3);
-fetch('https://formsubmit.co/ajax/snaaaalhatmi@gmail.com', {
-  method: 'POST',
-  headers: {'Content-Type': 'application/json'},
-  body: JSON.stringify({
-    subject: 'طلب جديد من متجر ميث - DARB',
-    message: 'طلب جديد:\n' + items + '\n\nالمجموع: ' + total + ' ر.ع' + '\n\nطريقة الدفع: ' + pay + '\nالبلد: ' + country + '\nالمحافظة: ' + gov + '\nالولاية: ' + wilaya + '\nالمنطقة: ' + area + '\nالهاتف: ' + phone
-  })
-}).then(() => {
-  cart = [];
-  updateCartDisplay();
-  document.getElementById('successMsg').style.display = 'block';
-  window.scrollTo(0,0);
-}).catch(() => {
-  document.getElementById('successMsg').style.display = 'block';
-});
+let t = getTotals();
+let msg = '🛍️ طلب جديد من متجر ميث - DARB\n\n👤 الاسم الثلاثي: ' + custName + '\n📞 رقم هاتف الزبونة: ' + phone + '\n\n' + items + '\n\nالمجموع الفرعي: ' + t.sub.toFixed(3) + ' ر.ع\nضريبة القيمة المضافة (5%): ' + t.vat.toFixed(3) + ' ر.ع\n🚚 نوع الشحن: ' + shipType + '\n🚚 قيمة الشحن: ' + t.ship.toFixed(3) + ' ر.ع\nالمجموع الكلي: ' + t.total.toFixed(3) + ' ر.ع\n\nطريقة الدفع: ' + pay + '\nحالة الدفع: ' + payStatus + '\n\n📍 عنوان التوصيل:\nالبلد: ' + country + '\nالمحافظة: ' + gov + '\nالولاية: ' + wilaya + '\nالمنطقة: ' + area;
+let url = 'https://wa.me/96894116067?text=' + encodeURIComponent(msg);
+window.open(url, '_blank');
+cart = [];
+updateCartDisplay();
+document.getElementById('successMsg').style.display = 'block';
+window.scrollTo(0,0);
 }
 function searchStores(){
 let v = document.getElementById('search').value;
