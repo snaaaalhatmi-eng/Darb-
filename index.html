@@ -3,133 +3,117 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>متجر ميث - Maith</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<title>دَرْب | DARB</title>
 <style>
-*{box-sizing:border-box;font-family:Arial} body{margin:0;background:#fff5f7}
-header{background:#ff2d78;color:#fff;padding:15px;text-align:center;position:sticky;top:0;z-index:10}
-header h1{margin:0} .tabs{display:flex;gap:8px;justify-content:center;margin:12px}
-.tabs button{border:none;padding:10px 16px;border-radius:20px;background:#fff;box-shadow:0 2px 8px #0001;cursor:pointer;font-weight:bold}
-.tabs button.active{background:#ff2d78;color:#fff}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:12px}
-.card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 12px #0001}
-.card img{width:100%;height:150px;object-fit:cover;background:#ffeef4}
-.card div{padding:10px} .price{color:#ff2d78;font-weight:bold}
-.btn{background:#ff2d78;color:#fff;border:none;padding:10px;width:100%;border-radius:10px;margin-top:8px;cursor:pointer;font-weight:bold}
-input,select{width:100%;padding:12px;margin:6px 0;border:1px solid #ddd;border-radius:10px}
-.box{background:#fff;margin:12px;padding:14px;border-radius:16px;box-shadow:0 4px 12px #0001}
-.hidden{display:none} .order{border:1px solid #eee;padding:10px;border-radius:12px;margin-bottom:10px}
+body{font-family:Arial;background:#f7f3ea;margin:0;text-align:center}
+header{background:#1e3a2f;color:white;padding:15px}
+.cart-bar{background:#1e3a2f;color:white;padding:10px;position:sticky;top:0;z-index:10}
+button{background:#2e5a4a;color:white;border:none;padding:10px 18px;border-radius:10px;margin:5px;cursor:pointer}
+.cat-btn{background:white;color:#1e3a2f;border:1px solid #1e3a2f}
+.cat-btn.active{background:#1e3a2f;color:white}
+.store{background:white;margin:15px;padding:20px;border-radius:15px;box-shadow:0 2px 8px #ccc;cursor:pointer}
+.product{background:#fff;padding:12px;margin:10px;border-radius:12px;border:1px solid #eee}
+.product img{width:100%;max-width:300px;border-radius:12px}
+footer{background:#1e3a2f;color:white;padding:20px;margin-top:20px}
+input{padding:10px;width:80%;border-radius:10px;border:1px solid #ccc}
 </style>
 </head>
 <body>
-<header><h1>💖 متجر ميث Maith</h1><p id="userInfo">أهلاً فيج، سجلي دخول عشان تطلبين</p></header>
 
-<div class="tabs">
-<button onclick="show('shop')" id="t-shop" class="active">المتجر 🛍️</button>
-<button onclick="show('cart')" id="t-cart">السلة 🛒 (<span id="cartCount">0</span>)</button>
-<button onclick="show('auth')" id="t-auth">دخول 🔐</button>
-<button onclick="show('courier')" id="t-courier">المندوب 🛵</button>
-<button onclick="show('admin')" id="t-admin">طلباتي 📦</button>
+<header>
+<h1>دَرْب | DARB</h1>
+<p>اطلب من أفضل المتاجر</p>
+<input id="search" placeholder="ابحث عن متجر..." onkeyup="searchStores()">
+</header>
+
+<div class="cart-bar">
+🛒 السلة: <span id="cartCount">0</span> |
+<button onclick="orderNow()">اطلب الحين</button>
 </div>
 
-<!-- المتجر -->
-<div id="shop"><div class="grid" id="products"></div></div>
+<div id="home">
+<h2>اختر التصنيف</h2>
+<button class="cat-btn active" onclick="filterCat('الكل',this)">الكل</button>
+<button class="cat-btn" onclick="filterCat('مطاعم',this)">مطاعم</button>
+<button class="cat-btn" onclick="filterCat('بقالات',this)">بقالات</button>
+<button class="cat-btn" onclick="filterCat('مشاريع منزلية',this)">مشاريع منزلية</button>
+<button class="cat-btn" onclick="filterCat('حلويات',this)">حلويات</button>
 
-<!-- السلة -->
-<div id="cart" class="hidden"><div class="box"><h3>سلة التسوق</h3><div id="cartItems"></div><p id="total"></p>
-<input id="custName" placeholder="اسمج الكامل">
-<input id="custPhone" placeholder="رقم التلفون 9xxxxxxx">
-<input id="custLocation" placeholder="الموقع - الحي / مسقط / السيب...">
-<select id="payMethod"><option value="cod">الدفع عند الاستلام 💵</option><option value="thawani">دفع أونلاين Thawani 💳</option></select>
-<button class="btn" onclick="placeOrder()">تأكيد الطلب ✅</button><p id="orderMsg"></p></div></div>
+<div id="stores">
+<div class="store" data-category="مشاريع منزلية" onclick="openStore('Maith')">
+<strong>متجر ميث - Maith</strong>
+<p>منتجات عناية للجسم والبشرة</p>
+<button>ادخل المتجر</button>
+</div>
+</div>
+</div>
 
-<!-- الدخول -->
-<div id="auth" class="hidden"><div class="box"><h3>تسجيل الدخول / حساب جديد</h3>
-<input id="email" placeholder="الإيميل">
-<input id="password" type="password" placeholder="كلمة السر">
-<button class="btn" onclick="signUp()">إنشاء حساب جديد</button>
-<button class="btn" style="background:#111" onclick="signIn()">دخول</button>
-<button class="btn" style="background:#888" onclick="signOut()">تسجيل خروج</button><p id="authMsg"></p></div></div>
+<div id="store-Maith" style="display:none;">
+<button onclick="backToStores()">⬅ رجوع للمتاجر</button>
+<h2>متجر ميث - Maith</h2>
+<p>منتجات عناية للجسم والبشرة</p>
 
-<!-- المندوب -->
-<div id="courier" class="hidden"><div class="box"><h3>واجهة المندوب 🛵</h3>
-<p>المندوب يضغط "موقعي" والنظام يطلع له أقرب طلب</p>
-<input id="courierName" placeholder="اسم المندوب">
-<button class="btn" onclick="getLocation()">📍 تحديد موقعي - شوف الطلبات القريبة</button>
-<p id="courierLoc"></p><div id="courierOrders"></div></div></div>
+<div class="product">
+<img src="maith1.jpg">
+<p><b>مقشر النيلة الزرقاء</b> - 5.000</p>
+<button onclick="addToCart('مقشر النيلة الزرقاء',5)">أضف للسلة</button>
+</div>
 
-<!-- طلباتي -->
-<div id="admin" class="hidden"><div class="box"><h3>طلباتي</h3><button class="btn" onclick="loadMyOrders()">تحديث الطلبات</button><div id="myOrders"></div></div></div>
+<div class="product">
+<img src="maith2.jpg">
+<p><b>مقشر الجل</b> - 4.500</p>
+<button onclick="addToCart('مقشر الجل',4.5)">أضف للسلة</button>
+</div>
+
+<div class="product">
+<img src="maith3.jpg">
+<p><b>المقشر الكريمي</b> - 3.900</p>
+<button onclick="addToCart('المقشر الكريمي',3.9)">أضف للسلة</button>
+</div>
+
+</div>
+
+<footer>
+<p><b>دَرْب | DARB</b></p>
+<p>سلطنة عُمان</p>
+</footer>
 
 <script>
-// ====== هنا تحطين مفاتيح Supabase بعدين - انا بوريج وين تجيبينهم ======
-const SUPABASE_URL = "PASTE_SUPABASE_URL_HERE";
-const SUPABASE_KEY = "PASTE_SUPABASE_ANON_KEY_HERE";
-let supabaseClient = null;
-if(SUPABASE_URL.includes("supabase")==false && SUPABASE_URL.startsWith("http")){ supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY); }
-
-// ====== منتجات ميث - غيري روابط الصور بروابط صورج ======
-const products = [
- {id:1,name:"كيكة ميث الخاصة",price:3.500,img:"https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600",desc:"كيكة طرية ولذيذة"},
- {id:2,name:"كب كيك ميث",price:1.500,img:"https://images.unsplash.com/photo-1486427944299-d1955d23e34d?w=600",desc:"كب كيك بالشوكولاتة"},
- {id:3,name:"كوكيز ميث",price:2.000,img:"https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=600",desc:"كوكيز بالشوكولاتة"},
- {id:4,name:"براونيز",price:2.500,img:"https://images.unsplash.com/photo-1606312619070-d48b4c652a52?w=600",desc:"براونيز دافئ"},
-];
-let cart = JSON.parse(localStorage.getItem('maith_cart')||'[]');
-let myLat=null, myLng=null;
-
-function show(id){ ['shop','cart','auth','courier','admin'].forEach(x=>document.getElementById(x).classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active')); document.getElementById('t-'+id).classList.add('active'); if(id=='cart') renderCart(); }
-function renderProducts(){ document.getElementById('products').innerHTML = products.map(p=>`<div class="card"><img src="${p.img}"><div><b>${p.name}</b><p>${p.desc}</p><div class="price">${p.price.toFixed(3)} ر.ع</div><button class="btn" onclick="addToCart(${p.id})">أضف للسلة +</button></div></div>`).join(''); }
-function addToCart(id){ let it=cart.find(x=>x.id==id); if(it) it.qty++; else {let p=products.find(x=>x.id==id); cart.push({...p,qty:1});} localStorage.setItem('maith_cart',JSON.stringify(cart)); document.getElementById('cartCount').innerText=cart.reduce((a,b)=>a+b.qty,0); alert('تمت الإضافة ✅'); }
-function renderCart(){ let h=''; let total=0; cart.forEach((c,i)=>{ total+=c.price*c.qty; h+=`<div style="display:flex;justify-content:space-between"><span>${c.name} x ${c.qty}</span><b>${(c.price*c.qty).toFixed(3)}</b> <button onclick="removeItem(${i})">❌</button></div>`;}); document.getElementById('cartItems').innerHTML=h||'السلة فاضية'; document.getElementById('total').innerText='الإجمالي: '+total.toFixed(3)+' ر.ع'; }
-function removeItem(i){ cart.splice(i,1); localStorage.setItem('maith_cart',JSON.stringify(cart)); document.getElementById('cartCount').innerText=cart.reduce((a,b)=>a+b.qty,0); renderCart(); }
-
-// ====== تسجيل الدخول الحقيقي ======
-async function signUp(){ if(!supabaseClient) return alert('بعد ما تحطين مفاتيح Supabase بيشتغل الدخول الحقيقي'); let {error}=await supabaseClient.auth.signUp({email:document.getElementById('email').value,password:document.getElementById('password').value}); document.getElementById('authMsg').innerText=error?error.message:'تم إنشاء الحساب! تحققي من إيميلج ✅'; }
-async function signIn(){ if(!supabaseClient) return alert('حطي مفاتيح Supabase أولاً'); let {data,error}=await supabaseClient.auth.signInWithPassword({email:document.getElementById('email').value,password:document.getElementById('password').value}); document.getElementById('authMsg').innerText=error?error.message:'تم الدخول ✅ أهلاً '+data.user.email; document.getElementById('userInfo').innerText='مسجلة دخول: '+data.user.email; }
-async function signOut(){ if(supabaseClient) await supabaseClient.auth.signOut(); document.getElementById('authMsg').innerText='تم تسجيل الخروج'; }
-
-// ====== الطلب الحقيقي ======
-async function placeOrder(){
- if(cart.length==0) return alert('السلة فاضية');
- let name=document.getElementById('custName').value, phone=document.getElementById('custPhone').value, loc=document.getElementById('custLocation').value, pay=document.getElementById('payMethod').value;
- if(!name||!phone||!loc) return alert('عبي الاسم والتلفون والموقع');
- let total=cart.reduce((a,b)=>a+b.price*b.qty,0);
- let order={customer_name:name,customer_phone:phone,location_text:loc,payment_method:pay,items:cart,total:total,status:'new',created_at:new Date().toISOString()};
- if(!supabaseClient){ // وضع تجريبي لين تركبين Supabase
-   let orders=JSON.parse(localStorage.getItem('maith_orders')||'[]'); orders.push(order); localStorage.setItem('maith_orders',JSON.stringify(orders));
-   document.getElementById('orderMsg').innerText='تم استلام طلبج! (وضع تجريبي لين نربط Supabase) رقم الطلب: '+(orders.length)+' - بيوصلك واتساب ✅';
-   cart=[]; localStorage.setItem('maith_cart','[]'); document.getElementById('cartCount').innerText='0'; renderCart(); return;
- }
- if(pay=='thawani'){ alert('هنا بيفتح لج Thawani للدفع - لازم مفتاح Thawani'); }
- let {error}=await supabaseClient.from('orders').insert([order]);
- if(error) document.getElementById('orderMsg').innerText='خطأ: '+error.message;
- else { document.getElementById('orderMsg').innerText='تم استلام طلبج ✅ المندوب القريب بيوصله إشعار الحين!'; cart=[]; localStorage.setItem('maith_cart','[]'); renderCart(); }
+let cart = [];
+function filterCat(cat, btn){
+document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
+btn.classList.add('active');
+document.querySelectorAll('#stores .store').forEach(s=>{
+if(cat=='الكل' || s.getAttribute('data-category')==cat){ s.style.display='block'; } else { s.style.display='none'; }
+});
 }
-
-// ====== المندوب - أقرب طلب ======
-function getLocation(){ navigator.geolocation.getCurrentPosition(pos=>{ myLat=pos.coords.latitude; myLng=pos.coords.longitude; document.getElementById('courierLoc').innerText='موقعك: '+myLat.toFixed(4)+', '+myLng.toFixed(4)+' - جاري البحث عن أقرب طلب...'; loadCourierOrders(); },()=>{ document.getElementById('courierLoc').innerText='فعلي GPS عشان نشوف الطلبات القريبة منك'; loadCourierOrders(); }); }
-async function loadCourierOrders(){
- let orders=[];
- if(supabaseClient){ let {data}=await supabaseClient.from('orders').select('*').eq('status','new').order('created_at',{ascending:false}); orders=data||[]; }
- else { orders=JSON.parse(localStorage.getItem('maith_orders')||'[]'); }
- if(orders.length==0) document.getElementById('courierOrders').innerHTML='لا توجد طلبات جديدة الحين';
- else document.getElementById('courierOrders').innerHTML=orders.map((o,i)=>`<div class="order"><b>طلب #${i+1} - ${o.customer_name}</b><p>📍 ${o.location_text} | 📞 ${o.customer_phone}</p><p>💰 ${o.total} ر.ع - ${o.payment_method}</p><p>${o.items.map(x=>x.name+' x'+x.qty).join(', ')}</p><button class="btn" onclick="acceptOrder(${i})">قبول الطلب ✅ أنا قريب</button></div>`).join('');
+function openStore(name){
+document.getElementById('home').style.display='none';
+document.getElementById('store-'+name).style.display='block';
+window.scrollTo(0,0);
 }
-async function acceptOrder(i){
- if(supabaseClient){ let {data}=await supabaseClient.from('orders').select('*').eq('status','new'); let o=data[i]; await supabaseClient.from('orders').update({status:'accepted',courier_name:document.getElementById('courierName').value}).eq('id',o.id); }
- else { let orders=JSON.parse(localStorage.getItem('maith_orders')||'[]'); orders[i].status='accepted'; localStorage.setItem('maith_orders',JSON.stringify(orders)); }
- alert('تم قبول الطلب! الزبون بيعرف انك جاي 🛵'); loadCourierOrders();
+function backToStores(){
+document.getElementById('home').style.display='block';
+document.getElementById('store-Maith').style.display='none';
 }
-async function loadMyOrders(){
- let orders=[];
- if(supabaseClient){ let {data}=await supabaseClient.from('orders').select('*').order('created_at',{ascending:false}).limit(10); orders=data||[]; }
- else orders=JSON.parse(localStorage.getItem('maith_orders')||'[]');
- document.getElementById('myOrders').innerHTML=orders.length?orders.map((o,i)=>`<div class="order"><b>طلب #${i+1} - ${o.status}</b><p>${o.location_text} - ${o.total} ر.ع</p></div>`).join(''):'لا توجد طلبات بعد';
- // تحديث لحظي للمندوب - كل 5 ثواني يشيك على طلب جديد
+function addToCart(name, price){
+cart.push({name:name, price:price});
+document.getElementById('cartCount').innerText = cart.length;
+alert('تمت إضافة ' + name + ' للسلة');
 }
-setInterval(()=>{ if(!document.getElementById('courier').classList.contains('hidden')) loadCourierOrders(); },5000);
-renderProducts(); renderCart(); document.getElementById('cartCount').innerText=cart.reduce((a,b)=>a+b.qty,0);
+function orderNow(){
+if(cart.length==0){ alert('السلة فاضية'); return; }
+let msg = 'مرحبا، أريد الطلب من متجر ميث - Maith:%0A';
+cart.forEach(item=>{ msg += '- ' + item.name + ' - ' + item.price + '%0A'; });
+window.open('https://wa.me/96894799751?text=' + msg, '_blank');
+}
+function searchStores(){
+let v = document.getElementById('search').value;
+document.querySelectorAll('#stores .store').forEach(s=>{
+s.style.display = s.innerText.includes(v) ? 'block' : 'none';
+});
+}
 </script>
+
 </body>
 </html>
