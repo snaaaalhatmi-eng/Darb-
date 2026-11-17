@@ -75,21 +75,44 @@ input,select{padding:12px;width:92%;border-radius:10px;border:1px solid #ccc;mar
 <button onclick="addToCart('المقشر الكريمي',3.9)">أضف للسلة</button>
 </div>
 
-<!-- طريقة الدفع -->
+<!-- طريقة الدفع - 3 خيارات -->
 <div style="background:white; padding:15px; border-radius:15px; margin:15px; text-align:right; direction:rtl;">
   <h3 style="display:flex; justify-content:space-between; align-items:center; margin:0 0 15px 0;">الدفع <span style="background:#4CAF50; color:white; border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; font-size:14px;">✓</span></h3>
   <label style="display:flex; justify-content:space-between; align-items:center; border:1px solid #ddd; padding:14px; border-radius:12px; margin-bottom:10px; cursor:pointer;">
     <span>💳 تحويل بنكي</span>
-    <input type="radio" name="payment" value="تحويل بنكي" style="width:20px; height:20px;">
+    <input type="radio" name="payment" value="تحويل بنكي" style="width:20px; height:20px;" onclick="showPayInfo('bank')">
+  </label>
+  <label style="display:flex; justify-content:space-between; align-items:center; border:1px solid #ddd; padding:14px; border-radius:12px; margin-bottom:10px; cursor:pointer;">
+    <span>📱 الدفع عن طريق رقم الهاتف</span>
+    <input type="radio" name="payment" value="الدفع عن طريق رقم الهاتف" style="width:20px; height:20px;" onclick="showPayInfo('phonePay')">
   </label>
   <label style="display:flex; justify-content:space-between; align-items:center; border:1px solid #ddd; padding:14px; border-radius:12px; cursor:pointer;">
     <span>💵 الدفع عند الاستلام</span>
-    <input type="radio" name="payment" value="الدفع عند الاستلام" checked style="width:20px; height:20px;">
+    <input type="radio" name="payment" value="الدفع عند الاستلام" checked style="width:20px; height:20px;" onclick="showPayInfo('cash')">
   </label>
+
+  <div id="pay-bank" style="display:none; background:#f0f7f2; padding:12px; border-radius:10px; margin-top:10px; font-size:14px;">
+    <b>💳 التحويل البنكي:</b><br>
+    حولي المبلغ على الحساب التالي وارسلي لنا صورة التحويل<br>
+    <b>اسم البنك:</b> اكتبي اسم البنك هنا<br>
+    <b>رقم الحساب:</b> اكتبي رقم الحساب هنا
+  </div>
+
+  <div id="pay-phonePay" style="display:none; background:#fff8e1; padding:12px; border-radius:10px; margin-top:10px; font-size:14px;">
+    <b>📱 الدفع عن طريق رقم الهاتف:</b><br>
+    حولي المبلغ على هذا الرقم:<br>
+    <b style="font-size:18px;">91234567</b><br>
+    وبعد التحويل ارسلي لنا صورة التحويل
+  </div>
+
+  <div id="pay-cash" style="display:block; background:#f9f9f9; padding:12px; border-radius:10px; margin-top:10px; font-size:14px;">
+    💵 ادفعي عند استلام طلبج
+  </div>
+
   <p style="font-size:12px; color:#888; text-align:center; margin-top:12px;">آمن ومشفر | بالمتابعة توافق على شروط الخدمة</p>
 </div>
 
-<!-- عنوان التوصيل - بدون رقم البيت -->
+<!-- عنوان التوصيل -->
 <div style="background:white; padding:15px; border-radius:15px; margin:15px; text-align:right; direction:rtl;">
   <h3 style="margin:0 0 12px 0;">📍 عنوان التوصيل</h3>
   <label>البلد</label>
@@ -98,10 +121,22 @@ input,select{padding:12px;width:92%;border-radius:10px;border:1px solid #ccc;mar
     <option>الإمارات</option>
     <option>السعودية</option>
   </select>
-  <label>الولاية</label>
-  <select id="wilaya">
-    <option>مسقط</option><option>السيب</option><option>بوشر</option><option>مطرح</option><option>العامرات</option><option>قريات</option><option>صلالة</option><option>صحار</option><option>نزوى</option><option>صور</option><option>البريمي</option><option>عبري</option><option>الرستاق</option><option>بركاء</option><option>المصنعة</option><option>السويق</option><option>الخابورة</option><option>صحم</option><option>لوى</option><option>شناص</option>
+  <label>المحافظة</label>
+  <select id="governorate" onchange="updateWilaya()">
+    <option>مسقط</option>
+    <option>ظفار</option>
+    <option>مسندم</option>
+    <option>البريمي</option>
+    <option>شمال الباطنة</option>
+    <option>جنوب الباطنة</option>
+    <option>الداخلية</option>
+    <option>شمال الشرقية</option>
+    <option>جنوب الشرقية</option>
+    <option>الظاهرة</option>
+    <option>الوسطى</option>
   </select>
+  <label>الولاية</label>
+  <select id="wilaya"></select>
   <label>المنطقة / الحي</label>
   <input id="area" type="text" placeholder="مثال: الخوض، الموالح، العذيبة">
   <label>رقم الهاتف</label>
@@ -117,6 +152,33 @@ input,select{padding:12px;width:92%;border-radius:10px;border:1px solid #ccc;mar
 
 <script>
 let cart = [];
+const wilayasByGov = {
+"مسقط":["مسقط","السيب","بوشر","مطرح","العامرات","قريات"],
+"ظفار":["صلالة","طاقة","مرباط","سدح","رخيوت","ضلكوت","مقشن","شليم وجزر الحلانيات","ثمريت","المزيونة"],
+"مسندم":["خصب","دبا","بخا","مدحاء"],
+"البريمي":["البريمي","محضة","السنينة"],
+"شمال الباطنة":["صحار","شناص","لوى","صحم","الخابورة","السويق"],
+"جنوب الباطنة":["الرستاق","العوابي","نخل","وادي المعاول","بركاء","المصنعة"],
+"الداخلية":["نزوى","بهلا","منح","الحمراء","أدم","إزكي","سمائل","بدبد"],
+"شمال الشرقية":["إبراء","المضيبي","بدية","القابل","وادي بني خالد","دماء والطائيين"],
+"جنوب الشرقية":["صور","الكامل والوافي","جعلان بني بو حسن","جعلان بني بو علي","مصيرة"],
+"الظاهرة":["عبري","ينقل","ضنك"],
+"الوسطى":["هيما","محوت","الدقم","الجازر"]
+};
+function updateWilaya(){
+let gov = document.getElementById('governorate').value;
+let w = document.getElementById('wilaya');
+w.innerHTML = '';
+wilayasByGov[gov].forEach(x=>{
+let o = document.createElement('option'); o.text = x; w.add(o);
+});
+}
+updateWilaya();
+function showPayInfo(type){
+document.getElementById('pay-bank').style.display = type=='bank' ? 'block' : 'none';
+document.getElementById('pay-phonePay').style.display = type=='phonePay' ? 'block' : 'none';
+document.getElementById('pay-cash').style.display = type=='cash' ? 'block' : 'none';
+}
 function filterCat(cat, btn){
 document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
 btn.classList.add('active');
@@ -142,17 +204,18 @@ function orderNow(){
 if(cart.length==0){ alert('السلة فاضية'); return; }
 let pay = document.querySelector('input[name="payment"]:checked').value;
 let country = document.getElementById('country').value;
+let gov = document.getElementById('governorate').value;
 let wilaya = document.getElementById('wilaya').value;
 let area = document.getElementById('area').value;
 let phone = document.getElementById('phone').value;
 if(!area){ alert('اكتبي المنطقة لو سمحتي'); return; }
 let items = cart.map(i => i.name + ' : ' + i.price).join('\n');
-fetch('https://formsubmit.co/ajax/YOUR_EMAIL_HERE', {
+fetch('https://formsubmit.co/ajax/snaaaalhatmi@gmail.com', {
   method: 'POST',
   headers: {'Content-Type': 'application/json'},
   body: JSON.stringify({
-    subject: 'طلب جديد من متجر ميثة - DARB',
-    message: 'طلب جديد:\n' + items + '\n\nطريقة الدفع: ' + pay + '\nالبلد: ' + country + '\nالولاية: ' + wilaya + '\nالمنطقة: ' + area + '\nالهاتف: ' + phone
+    subject: 'طلب جديد من متجر ميث - DARB',
+    message: 'طلب جديد:\n' + items + '\n\nطريقة الدفع: ' + pay + '\nالبلد: ' + country + '\nالمحافظة: ' + gov + '\nالولاية: ' + wilaya + '\nالمنطقة: ' + area + '\nالهاتف: ' + phone
   })
 }).then(() => {
   cart = [];
