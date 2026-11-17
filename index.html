@@ -1,0 +1,85 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>دَرْب | كل طلب له دَرْب</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#faf9f6;color:#292b27}
+header{padding:20px 6%;display:flex;justify-content:space-between;align-items:center;background:white}
+.logo{font-size:27px;font-weight:bold;color:#45634c}
+.logo small{display:block;font-size:12px;font-weight:normal}
+button{border:0;border-radius:10px;padding:12px 20px;background:#45634c;color:white;font-size:15px}
+.hero{padding:55px 7%;background:#edf1e9;text-align:center}
+.hero h1{font-size:35px;margin:10px 0;color:#354b39}
+.hero p{color:#626a60;line-height:1.9}
+.search{max-width:500px;margin:25px auto;display:flex;background:white;border-radius:12px;padding:6px}
+.search input{flex:1;min-width:0;border:0;padding:12px;font-size:15px;outline:none}
+section{padding:30px 6%}
+h2{font-size:22px}
+.categories{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.category{background:white;padding:20px 8px;border-radius:13px;text-align:center;box-shadow:0 2px 12px #00000008}
+.category span{font-size:27px;display:block;margin-bottom:9px}
+.stores{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}
+.store{background:white;padding:18px 12px;border-radius:13px;line-height:1.8}
+.store strong{font-size:16px}
+.store p{font-size:13px;color:#777;margin:5px 0}
+.note{background:#edf1e9;padding:15px;border-radius:12px;font-size:13px;line-height:1.8}
+footer{text-align:center;padding:28px;background:#354b39;color:white;line-height:2}
+@media(min-width:700px){.stores{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<header>
+ <div class="logo">دَرْب <small>DARB | كل طلب له دَرْب</small></div>
+ <button onclick="alert('سيتم تفعيل الحسابات قريبًا')">دخول / تسجيل</button>
+</header>
+
+<div class="hero">
+ <h1>كل طلب له دَرْب</h1>
+ <p>اطلب احتياجاتك من متاجر منطقتك، وخلي الباقي علينا.</p>
+ <div class="search">
+  <input id="search" placeholder="وش تدور عليه؟">
+  <button onclick="searchStores()">بحث</button>
+ </div>
+ <p>نبدأ من وادي بني غافر – ولاية الرستاق</p>
+</div>
+
+<section>
+ <h2>تسوّق حسب القسم</h2>
+ <div class="categories">
+  <div class="category"><span>🍔</span>مطاعم</div>
+  <div class="category"><span>🛒</span>بقالة</div>
+  <div class="category"><span>☕</span>مقاهي</div>
+  <div class="category"><span>🎁</span>هدايا</div>
+  <div class="category"><span>🏪</span>متاجر</div>
+  <div class="category"><span>🧁</span>مشاريع منزلية</div>
+ </div>
+</section>
+
+<section>
+ <h2>المتاجر</h2>
+ <div class="stores" id="stores">
+  <div class="store"><strong>متجرك الأول</strong><p>سيظهر هنا بعد إضافته من الإدارة</p></div>
+  <div class="store"><strong>متجرك الثاني</strong><p>سيظهر هنا بعد إضافته من الإدارة</p></div>
+ </div>
+ <p class="note">هذه نسخة أولية تجريبية. المتاجر والطلبات وتسجيل الدخول ستُربط لاحقًا بقاعدة بيانات حقيقية.</p>
+</section>
+
+<footer>
+ <strong>دَرْب | DARB</strong><br>
+ كل طلب له دَرْب ❤️<br>
+ وادي بني غافر – سلطنة عُمان
+</footer>
+
+<script>
+function searchStores(){
+ const value=document.getElementById('search').value.trim();
+ if(!value){alert('اكتبي اسم المتجر أو القسم أولًا');return;}
+ alert('سيتم تفعيل البحث عن '+value+' في المرحلة القادمة');
+}
+</script>
+</body>
+</html>
