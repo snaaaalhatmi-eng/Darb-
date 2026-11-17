@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -7,9 +6,7 @@
 <title>دَرْب | كل طلب له دَرْب</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#faf9f6;color:#292b27}
- <div id="cartBar" style="position:fixed;top:0;left:0;right:0;background:#000;color:#fff;padding:10px;text-align:center;z-index:999">🛒 السلة: <span id="cartCount">0</span> | <button onclick="checkout()">اطلب الحين</button></div>
-<br><br>
+body{margin:0;font-family:Arial,sans-serif;background:#faf9f6;color:#292b27;padding-top:45px}
 header{padding:20px 6%;display:flex;justify-content:space-between;align-items:center;background:white}
 .logo{font-size:27px;font-weight:bold;color:#45634c}
 .logo small{display:block;font-size:12px;font-weight:normal}
@@ -22,7 +19,7 @@ button{border:0;border-radius:10px;padding:12px 20px;background:#45634c;color:wh
 section{padding:30px 6%}
 h2{font-size:22px}
 .categories{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.category{background:white;padding:20px 8px;border-radius:13px;text-align:center;box-shadow:0 2px 12px #00000008}
+.category{background:white;padding:20px 8px;border-radius:13px;text-align:center;box-shadow:0 2px 12px #00000008;cursor:pointer}
 .category span{font-size:27px;display:block;margin-bottom:9px}
 .stores{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}
 .store{background:white;padding:18px 12px;border-radius:13px;line-height:1.8}
@@ -34,11 +31,11 @@ footer{text-align:center;padding:28px;background:#354b39;color:white;line-height
 </style>
 </head>
 <body>
+<div id="cartBar" style="position:fixed;top:0;left:0;right:0;background:#000;color:#fff;padding:10px;text-align:center;z-index:999">🛒 السلة: <span id="cartCount">0</span> | <button onclick="checkout()">اطلب الحين</button></div>
 <header>
  <div class="logo">دَرْب <small>DARB | كل طلب له دَرْب</small></div>
  <button onclick="alert('سيتم تفعيل الحسابات قريبًا')">دخول / تسجيل</button>
 </header>
-
 <div class="hero">
  <h1>كل طلب له دَرْب</h1>
  <p>اطلب احتياجاتك من متاجر منطقتك، وخلي الباقي علينا.</p>
@@ -48,74 +45,33 @@ footer{text-align:center;padding:28px;background:#354b39;color:white;line-height
  </div>
  <p>نبدأ من وادي بني غافر – ولاية الرستاق</p>
 </div>
-
 <section>
  <h2>تسوّق حسب القسم</h2>
  <div class="categories">
+<div class="category" onclick="filterCategory('الكل')"><span>✨</span> الكل </div>
 <div class="category" onclick="filterCategory('مطاعم')"><span>🍔</span> مطاعم </div>
 <div class="category" onclick="filterCategory('بقالة')"><span>🛒</span> بقالة </div>
-<div class="category" onclick="filterCategory('قهوة')"><span>☕</span> قهوة </div>  
- <div class="category" onclick="filterCategory('هدايا')"><span>🎁</span> هدايا </div> 
+<div class="category" onclick="filterCategory('قهوة')"><span>☕</span> قهوة </div>
+<div class="category" onclick="filterCategory('هدايا')"><span>🎁</span> هدايا </div>
 <div class="category" onclick="filterCategory('متاجر')"><span>🏪</span> متاجر </div>
 <div class="category" onclick="filterCategory('مشاريع')"><span>🧁</span> مشاريع منزلية </div>
  </div>
 </section>
-
 <section>
  <h2>المتاجر</h2>
  <div class="stores" id="stores">
-<div class="store" data-category="مطاعم"><strong>متجرك الأول</strong>
-<div class="store" data-category="بقالة"><strong>متجرك الثاني</strong>   الإدارة</p></div>
- <div class="store" data-category="مشاريع">
-  <strong>متجر مَيْث</strong><p>مقشر النيلة الزرقاء - 5.000 ريال</p><button>أضف للسلة</button></div>
+  <div class="store" data-category="مطاعم"><strong>المتجر الأول</strong><p>مطعم - اطلب الحين</p><button onclick="addToCart('المتجر الأول','وجبة','1 ريال','96894799751')">أضف للسلة</button></div>
+  <div class="store" data-category="بقالة"><strong>المتجر الثاني</strong><p>بقالة - اطلب الحين</p><button onclick="addToCart('المتجر الثاني','منتج','1 ريال','96894799751')">أضف للسلة</button></div>
+  <div class="store" data-category="مشاريع"><strong>متجر مَيْث - MEETH</strong><p>مقشر النيلة الزرقاء - 5.000 ريال</p><p>وادي بني غافر ، توصيل سريع لبيتك ، وادفع عند الاستلام</p><button onclick="addToCart('متجر ميث','مقشر النيلة الزرقاء','5.000 ريال','96894799751')">أضف للسلة</button></div>
  </div>
- <p class="note"><p>اطلب من أفضل متاجر ومطاعم وادي بني غافر، وادفع عند الاستلام. توصيل سريع لبيتك.</p>.</p>
+ <p class="note">اطلب من أفضل متاجر ومطاعم وادي بني غافر، وادفع عند الاستلام. توصيل سريع لبيتك.</p>
 </section>
-
 <footer>
  <strong>دَرْب | DARB</strong><br>
  كل طلب له دَرْب ❤️<br>
  وادي بني غافر – سلطنة عُمان
 </footer>
-
-function searchStores(){
-  let value = document.getElementById('search').value.trim().toLowerCase();
-  let stores = document.querySelectorAll('.store');
-  if(!value){
-    stores.forEach(s => s.style.display = 'block');
-    return;
-  }
-  stores.forEach(store => {
-    let text = store.innerText.toLowerCase();
-    store.style.display = text.includes(value) ? 'block' : 'none';
-  });
-}
-function filterCategory(cat){
-  let stores = document.querySelectorAll('.store');
-  stores.forEach(s => {
-    if(cat === 'الكل' || s.getAttribute('data-category') === cat){
-      s.style.display = 'block';
-    } else {
-      s.style.display = 'none';
-    }
-  });
-}
-fetch('stores.json')
-  .then(r => r.json())
-  .then(data => {
-    let box = document.getElementById('stores');
-    box.innerHTML = '';
-    data.forEach(s => {
-      box.innerHTML += `
-  <div class="store" data-category="${s.category}">
-  <strong>${s.name}</strong>
-  <p>${s.product} - ${s.price}
-  <button onclick="addToCart...">أضف للسلة</button>
-</div>`;
-       });
-  });  });
-</script>
- <script>
+<script>
 let cart = [];
 function addToCart(name, product, price, whatsapp) {
   cart.push({name, product, price, whatsapp});
@@ -130,6 +86,25 @@ function checkout() {
   });
   let firstShop = cart[0].whatsapp;
   window.open('https://wa.me/' + firstShop + '?text=' + encodeURIComponent(msg), '_blank');
+}
+function searchStores(){
+  let value = document.getElementById('search').value.trim().toLowerCase();
+  let stores = document.querySelectorAll('.store');
+  if(!value){ stores.forEach(s => s.style.display = 'block'); return; }
+  stores.forEach(store => {
+    let text = store.innerText.toLowerCase();
+    store.style.display = text.includes(value) ? 'block' : 'none';
+  });
+}
+function filterCategory(cat){
+  let stores = document.querySelectorAll('.store');
+  stores.forEach(s => {
+    if(cat === 'الكل' || s.getAttribute('data-category') === cat){
+      s.style.display = 'block';
+    } else {
+      s.style.display = 'none';
+    }
+  });
 }
 </script>
 </body>
