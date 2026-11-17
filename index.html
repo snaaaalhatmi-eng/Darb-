@@ -3,150 +3,130 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>دَرْب | DARB - كل طلب له دَرْب</title>
+<title>DARB | دَرْب</title>
 <style>
-*{box-sizing:border-box;font-family:system-ui,Tahoma,sans-serif}
-body{margin:0;background:#F5F0E6;color:#222}
-header{background:#536343;color:#fff;padding:14px 16px;position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center}
-header b{font-size:22px;letter-spacing:1px}
-header span{font-size:12px;background:#D8C8AE;color:#333;padding:4px 8px;border-radius:20px}
-nav{display:flex;gap:6px;overflow:auto;padding:10px;background:#fff}
-nav button{white-space:nowrap;border:1px solid #D8C8AE;background:#F5F0E6;padding:8px 14px;border-radius:20px;cursor:pointer}
-nav button.active{background:#536343;color:#fff}
-.wrap{max-width:900px;margin:auto;padding:16px}
-.card{background:#fff;border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
-h1{margin:6px 0;font-size:30px;color:#536343} h2{color:#536343;margin:8px 0}
-input,select,textarea{width:100%;padding:12px;border:1px solid #D8C8AE;border-radius:12px;margin:6px 0;background:#fff;font-size:15px}
-.btn{background:#536343;color:#fff;border:0;padding:13px 18px;border-radius:12px;width:100%;font-size:16px;cursor:pointer;font-weight:700}
-.btn2{background:#D8C8AE;color:#222;border:0;padding:10px 14px;border-radius:10px;cursor:pointer}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media(max-width:600px){.grid{grid-template-columns:1fr}}
-.store,.prod{cursor:pointer;border:1px solid #eee;border-radius:16px;overflow:hidden;background:#fff}
-.store img,.prod img{width:100%;height:140px;object-fit:cover}
-.store div,.prod div{padding:10px}
-.price{color:#536343;font-weight:800}
-.flex{display:flex;justify-content:space-between;align-items:center;gap:8px}
-.badge{background:#F5F0E6;padding:4px 8px;border-radius:20px;font-size:12px}
-.hidden{display:none}
-.cartRow{display:flex;justify-content:space-between;align-items:center;border-bottom:1px dashed #ddd;padding:10px 0}
-.small{font-size:13px;color:#666}
-.success{background:#536343;color:#fff;text-align:center;padding:24px;border-radius:18px}
+*{box-sizing:border-box;font-family:'Segoe UI',Tahoma,sans-serif}
+body{margin:0;background:#F5F0E6}
+.top{background:#536343;color:#fff;padding:24px 16px 16px;text-align:center;border-radius:0 0 20px 20px}
+.top h1{margin:0;font-size:30px}
+.top p{margin:8px 0;color:#D8C8AE}
+.top input{width:100%;padding:13px;border-radius:12px;border:none;outline:none;margin-top:10px;text-align:right}
+.welcome{background:#fff;margin:16px;border-radius:16px;padding:16px;text-align:center}
+.welcome b{font-size:18px}
+.welcome p{margin:4px;color:#888}
+.logout{background:#c0392b;color:#fff;border:none;padding:8px 18px;border-radius:10px;margin-top:8px;cursor:pointer}
+.actions{display:flex;gap:8px;justify-content:center;padding:0 16px;flex-wrap:wrap}
+.actions button{background:#3d4a32;color:#fff;border:none;padding:10px 14px;border-radius:12px;cursor:pointer}
+.actions .bell{background:#fff;font-size:20px}
+h2{text-align:center;margin:24px 0 12px}
+.cats{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:0 12px}
+.cats button{background:#fff;border:1px solid #536343;padding:9px 16px;border-radius:12px;cursor:pointer}
+.cats button.active{background:#536343;color:#fff}
+.store{background:#fff;margin:16px;border-radius:16px;padding:20px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.store h3{margin:0}
+.store p{color:#555}
+.enter{background:#536343;color:#fff;border:none;padding:10px 22px;border-radius:12px;cursor:pointer}
+.products{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:12px}
+.card{background:#fff;border-radius:14px;overflow:hidden;text-align:center;padding-bottom:10px}
+.card img{width:100%;height:120px;object-fit:cover}
+.add{background:#536343;color:#fff;border:none;padding:8px 14px;border-radius:10px;cursor:pointer}
+footer{background:#536343;color:#fff;text-align:center;padding:20px;margin-top:20px}
+#cartPage,#checkoutPage,#donePage{display:none;padding:16px}
+.item{background:#fff;padding:12px;border-radius:12px;margin-bottom:8px;display:flex;justify-content:space-between}
+input,select{width:100%;padding:12px;margin:6px 0;border-radius:10px;border:1px solid #D8C8AE}
+.btn{width:100%;background:#536343;color:#fff;border:none;padding:14px;border-radius:14px;margin-top:10px}
 </style>
 </head>
 <body>
-<header><div><b>دَرْب | DARB</b><div style="font-size:13px">كل طلب له دَرْب ❤️</div></div><span onclick="show('cart')">🛒 السلة <b id="cartCount">0</b></span></header>
 
-<nav>
-<button class="active" onclick="show('home',this)">🏠 الرئيسية</button>
-<button onclick="show('cats',this)">🛍️ الأقسام</button>
-<button onclick="show('stores',this)">🏪 المتاجر</button>
-<button onclick="show('cart',this)">🛒 السلة والدفع</button>
-<button onclick="show('dash',this)">⚙️ حسابي / إدارة</button>
-</nav>
-
-<div class="wrap">
-
-<!-- HOME -->
-<div id="home">
-<div class="card" style="text-align:center">
-<div style="font-size:50px">🛵</div>
-<h1>دَرْب | DARB</h1>
-<p>منصة تسوق وتوصيل إلكترونية في سلطنة عُمان<br><b>كل طلب له دَرْب ❤️</b></p>
-<input id="search" placeholder="🔍 ابحث عن مطعم، بقالة، ورد، منتج..." oninput="doSearch(this.value)">
-<button class="btn" onclick="show('cats')">ابدأ التسوق ←</button>
-<p class="small">مطاعم • بقالات • محلات • ورد • مشاريع منزلية</p>
-</div>
-<div class="card"><h2>🔥 متاجر مميزة اليوم</h2><div class="grid" id="featured"></div></div>
+<div class="top">
+<h1>DARB | دَرْب</h1>
+<p>اطلب من أفضل المتاجر</p>
+<input id="search" placeholder="ابحث عن متجر..." oninput="render()">
 </div>
 
-<!-- CATS -->
-<div id="cats" class="hidden">
-<div class="card"><h2>اختر القسم</h2><p class="small">اختار قسم عشان تشوف المتاجر فيه</p></div>
-<div class="grid" id="catGrid"></div>
+<div class="welcome">
+<b>👋 أهلاً سناء هلال الحاتمي</b>
+<p>94799851</p>
+<button class="logout">تسجيل خروج</button>
 </div>
 
-<!-- STORES -->
-<div id="stores" class="hidden">
-<div class="card"><h2 id="storeTitle">كل المتاجر</h2><p class="small" id="storeSub">اضغط على أي متجر عشان تشوف منتجاته</p></div>
-<div class="grid" id="storeGrid"></div>
+<div class="actions">
+<button onclick="showCart()">🛒 السلة: <span id="count">0</span></button>
+<button onclick="alert('طلباتك: لا يوجد طلبات بعد')">🧾 طلباتي</button>
+<button>🔔</button>
+<button onclick="document.getElementById('stores').scrollIntoView({behavior:'smooth'})">اطلب الحين</button>
 </div>
 
-<!-- PRODUCTS -->
-<div id="products" class="hidden">
-<div class="card"><button class="btn2" onclick="show('stores')">→ رجوع للمتاجر</button><h2 id="prodStoreName"></h2><p class="small" id="prodStoreDesc"></p></div>
-<div class="grid" id="prodGrid"></div>
+<h2>اختر التصنيف</h2>
+<div class="cats" id="cats"></div>
+
+<div id="stores"></div>
+
+<div class="products" id="products"></div>
+
+<div id="cartPage">
+<h2>🛒 السلة</h2>
+<div id="cartItems"></div>
+<h3 id="total"></h3>
+<button class="btn" onclick="showCheckout()">إتمام الطلب</button>
+<button class="btn" style="background:#D8C8AE;color:#333" onclick="goHome()">رجوع</button>
 </div>
 
-<!-- CART -->
-<div id="cart" class="hidden">
-<div class="card"><h2>🛒 السلة والدفع</h2><div id="cartItems"></div><div id="totals"></div></div>
-<div class="card"><h2>📍 بيانات التوصيل</h2>
-<input id="custName" placeholder="الاسم الكامل *">
-<input id="custPhone" placeholder="رقم الهاتف * - إجباري">
-<textarea id="custAddr" placeholder="عنوان التوصيل - الولاية / المنطقة / البيت *"></textarea>
-<h3>طريقة الدفع</h3>
-<label><input type="radio" name="pay" value="cod" checked> 💵 الدفع عند الاستلام</label><br>
-<label><input type="radio" name="pay" value="bank"> 🏦 التحويل البنكي - مع رفع إيصال الدفع</label>
-<div id="receiptBox" class="hidden"><p class="small">ارفع صورة الإيصال:</p><input type="file" accept="image/*"></div>
-<button class="btn" onclick="placeOrder()">تأكيد الطلب ✅</button>
-</div>
+<div id="checkoutPage">
+<h2>الدفع والتوصيل</h2>
+<input placeholder="الاسم الكامل" id="n">
+<input placeholder="رقم الهاتف" id="p">
+<input placeholder="عنوان التوصيل" id="a">
+<select id="pay"><option>الدفع عند الاستلام</option><option>التحويل البنكي مع رفع الإيصال</option></select>
+<input type="file" id="receipt" style="display:none">
+<h3 id="final"></h3>
+<button class="btn" onclick="confirmOrder()">تأكيد الطلب</button>
 </div>
 
-<!-- CONFIRM -->
-<div id="confirm" class="hidden">
-<div class="success"><div style="font-size:50px">✅</div><h2>تم إتمام عملية طلبك بنجاح!</h2><p>بيتم تجهيز طلبك وشحنه قريباً ❤️</p><p>رقم الطلب: <b id="orderNo"></b></p><p id="orderDetail" class="small"></p><p>حالة الطلب: <b>قيد التجهيز 🍳</b></p></div>
-<button class="btn" onclick="show('home')">رجوع للرئيسية</button>
+<div id="donePage" style="text-align:center">
+<h2>تم إتمام عملية طلبك بنجاح! 🎉</h2>
+<p>بيتم تجهيز طلبك وشحنه قريباً ❤️</p>
+<h3 id="orderNo"></h3>
+<p id="orderDet"></p>
+<button class="btn" onclick="goHome()">تسوق مرة ثانية</button>
 </div>
 
-<!-- DASH -->
-<div id="dash" class="hidden">
-<div class="card"><h2>⚙️ أنظمة الموقع</h2>
-<select id="role" onchange="roleChange()"><option value="customer">👤 حساب العميل - طلباتي</option><option value="store">🏪 حساب المتجر - طلباتي ومنتجاتي</option><option value="driver">🛵 حساب المندوب - الطلبات المسندة</option><option value="admin">👑 لوحة الإدارة</option></select>
-<div id="dashContent" style="margin-top:12px"></div>
-</div>
-</div>
-
-</div>
+<footer><b>DARB | دَرْب</b><br>سلطنة عُمان<br>كل طلب له دَرْب ❤️</footer>
 
 <script>
-let cats=[
-{id:'food',name:'المطاعم',emoji:'🍔',desc:'أكل عماني، برجر، بيتزا'},
-{id:'grocery',name:'البقالات',emoji:'🛒',desc:'أغراض البيت اليومية'},
-{id:'shops',name:'المحلات',emoji:'🏪',desc:'ملابس، عطور، إلكترونيات'},
-{id:'flowers',name:'محلات الورد',emoji:'🌹',desc:'باقات وهدايا'},
-{id:'home',name:'المشاريع المنزلية',emoji:'🏠',desc:'أكل بيتي، حلويات، حرف'},
-];
+let cats=["الكل","مطاعم","بقالات","مشاريع منزلية","حلويات","محلات","ورد"];
+let active="الكل";
 let stores=[
-{id:1,cat:'food',name:'مطعم بيت المشاوي',img:'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600',desc:'مشاوي عمانية طازجة'},
-{id:2,cat:'food',name:'مطعم السلطان',img:'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600',desc:'أكل عماني أصيل'},
-{id:3,cat:'grocery',name:'بقالة النور',img:'https://images.unsplash.com/photo-1578916171728-46686eac8d58?w=600',desc:'توصيل سريع'},
-{id:4,cat:'shops',name:'محل الأناقة',img:'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600',desc:'عطور وملابس'},
-{id:5,cat:'flowers',name:'ورد الجوري',img:'https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=600',desc:'باقات ورد طبيعي'},
-{id:6,cat:'home',name:'مطبخ أم سارة',img:'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=600',desc:'حلويات وأكل بيتي'},
+{id:1,name:"متجر ميث - Maith",desc:"منتجات عناية للجسم والبشرة",cat:"محلات",img:"https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=600"},
+{id:2,name:"مطعم البيت العماني",desc:"أكل عماني أصيل",cat:"مطاعم",img:"https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600"},
+{id:3,name:"بقالة النخلة",desc:"كل احتياجات البيت",cat:"بقالات",img:"https://images.unsplash.com/photo-1578916171728-46686eac8d58?w=600"},
+{id:4,name:"وردة للورود",desc:"باقات ورد فاخرة",cat:"ورد",img:"https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=600"},
+{id:5,name:"مشروع أم سارة",desc:"كيك وحلويات منزلية",cat:"مشاريع منزلية",img:"https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600"},
+{id:6,name:"حلويات الحارة",desc:"حلويات عمانية",cat:"حلويات",img:"https://images.unsplash.com/photo-1551024506-0bccd828d307?w=600"},
 ];
-let products={
-1:[{name:'صحن مشاوي مشكل',price:5.5,img:'https://images.unsplash.com/photo-1544025162-d76694265947?w=600',desc:'مشاوي + خبز + صلصة'},{name:'برياني دجاج',price:3.2,img:'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=600',desc:'برياني عماني'}],
-2:[{name:'شواء عماني',price:8,img:'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600',desc:'لحم طازج'},{name:'هريس',price:2.5,img:'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=600',desc:'هريس باللحم'}],
-3:[{name:'سلة أغراض أسبوعية',price:12,img:'https://images.unsplash.com/photo-1542838132-92c53300491e?w=600',desc:'خضار + فواكه + أساسيات'},{name:'حليب + خبز',price:2,img:'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=600',desc:'طازج يوميا'}],
-4:[{name:'عطر عود عماني',price:15,img:'https://images.unsplash.com/photo-1541643600914-78b084683601?w=600',desc:'عود أصلي'},{name:'عباية أنيقة',price:22,img:'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=600',desc:'قماش فاخر'}],
-5:[{name:'باقة ورد أحمر',price:10,img:'https://images.unsplash.com/photo-1561181286-d3fee7d55364?w=600',desc:'12 وردة + تغليف'},{name:'باقة ورد مشكل',price:14,img:'https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=600',desc:'ورد طبيعي'}],
-6:[{name:'كيكة عسل',price:6,img:'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600',desc:'كيكة بيتي'},{name:'حلويات مشكلة',price:4.5,img:'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=600',desc:'معمول + بقلاوة'}],
-};
-let cart=[]; let currentCat='all'; let currentStore=null;
-function show(id,btn){document.querySelectorAll('.wrap > div').forEach(d=>d.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');window.scrollTo(0,0);if(id=='cart')renderCart();if(id=='dash')roleChange();}
-function renderCats(){document.getElementById('catGrid').innerHTML=cats.map(c=>`<div class="card" onclick="openCat('${c.id}','${c.name}')" style="text-align:center;cursor:pointer"><div style="font-size:40px">${c.emoji}</div><h2>${c.name}</h2><p class="small">${c.desc}</p><button class="btn2">دخول ←</button></div>`).join('');}
-function openCat(id,name){currentCat=id;document.getElementById('storeTitle').innerText='متاجر '+name;renderStores();show('stores');}
-function renderStores(){let list=currentCat=='all'?stores:stores.filter(s=>s.cat==currentCat);document.getElementById('storeGrid').innerHTML=list.map(s=>`<div class="store" onclick="openStore(${s.id})"><img src="${s.img}"><div><b>${s.name}</b><p class="small">${s.desc}</p><span class="badge">⭐ 4.8 • توصيل سريع</span></div></div>`).join('');}
-function openStore(id){currentStore=stores.find(s=>s.id==id);document.getElementById('prodStoreName').innerText=currentStore.name;document.getElementById('prodStoreDesc').innerText=currentStore.desc;document.getElementById('prodGrid').innerHTML=products[id].map((p,i)=>`<div class="prod"><img src="${p.img}"><div><b>${p.name}</b><p class="small">${p.desc}</p><div class="flex"><span class="price">${p.price} ر.ع</span><button class="btn2" onclick="addToCart(${id},${i})">+ إضافة للسلة</button></div></div></div>`).join('');show('products');}
-function addToCart(sid,idx){let p=products[sid][idx];let f=cart.find(x=>x.name==p.name);if(f)f.qty++;else cart.push({...p,qty:1});document.getElementById('cartCount').innerText=cart.reduce((a,b)=>a+b.qty,0);alert('تمت الإضافة للسلة ✅ '+p.name);}
-function renderCart(){let el=document.getElementById('cartItems');if(cart.length==0){el.innerHTML='<p>سلتك فارغة، روح تسوق 😊</p>';document.getElementById('totals').innerHTML='';return;}el.innerHTML=cart.map((c,i)=>`<div class="cartRow"><div><b>${c.name}</b><div class="small">${c.price} ر.ع</div></div><div><button onclick="chg(${i},-1)">-</button> ${c.qty} <button onclick="chg(${i},1)">+</button> <button onclick="delItem(${i})">🗑️</button></div><b>${(c.price*c.qty).toFixed(2)}</b></div>`).join('');let sub=cart.reduce((a,b)=>a+b.price*b.qty,0);let del=1.5;document.getElementById('totals').innerHTML=`<p>المجموع: ${sub.toFixed(2)} ر.ع</p><p>رسوم التوصيل: ${del} ر.ع</p><h3>الإجمالي: ${(sub+del).toFixed(2)} ر.ع</h3>`;}
-function chg(i,d){cart[i].qty+=d;if(cart[i].qty<=0)cart.splice(i,1);document.getElementById('cartCount').innerText=cart.reduce((a,b)=>a+b.qty,0);renderCart();}
-function delItem(i){cart.splice(i,1);document.getElementById('cartCount').innerText=cart.reduce((a,b)=>a+b.qty,0);renderCart();}
-function doSearch(v){if(!v)return;let all=[];for(let k in products)products[k].forEach(p=>{if(p.name.includes(v))all.push(p)});if(all.length){document.getElementById('featured').innerHTML=all.map(p=>`<div class="prod"><img src="${p.img}"><div><b>${p.name}</b><div class="price">${p.price} ر.ع</div></div></div>`).join('');}}
-document.querySelectorAll('input[name="pay"]').forEach(r=>r.addEventListener('change',()=>{document.getElementById('receiptBox').classList.toggle('hidden',document.querySelector('input[name="pay"]:checked').value!='bank');}));
-function placeOrder(){let name=document.getElementById('custName').value;let phone=document.getElementById('custPhone').value;let addr=document.getElementById('custAddr').value;if(!name||!phone||!addr){alert('عبي الاسم ورقم الهاتف والعنوان، كلها إجبارية');return;}if(cart.length==0){alert('سلتك فارغة');return;}let no='DARB-'+Math.floor(1000+Math.random()*9000);let total=cart.reduce((a,b)=>a+b.price*b.qty,0)+1.5;document.getElementById('orderNo').innerText=no;document.getElementById('orderDetail').innerText=`${name} - ${phone} - ${addr} - الإجمالي ${total.toFixed(2)} ر.ع - الدفع: ${document.querySelector('input[name="pay"]:checked').value=='cod'?'عند الاستلام':'تحويل بنكي'}`;cart=[];document.getElementById('cartCount').innerText='0';show('confirm');}
-function roleChange(){let r=document.getElementById('role').value;let c=document.getElementById('dashContent');if(r=='customer')c.innerHTML='<p>طلباتك: <b>DARB-1234 - قيد التجهيز 🍳</b></p><p>طلباتك السابقة: DARB-1001 - تم التوصيل ✅</p>';if(r=='store')c.innerHTML='<p>طلب جديد: DARB-1234 - برياني دجاج x2 - جهز الطلب</p><button class="btn2">تحديث حالة الطلب: تم التجهيز ✅</button><p>منتجاتي: برياني، مشاوي - <button class="btn2">+ إضافة منتج</button></p>';if(r=='driver')c.innerHTML='<p>طلب مسند إليك: DARB-1234 - توصيل إلى بركاء</p><button class="btn2">استلمت الطلب 🛵</button> <button class="btn2">تم التوصيل ✅</button>';if(r=='admin')c.innerHTML='<p>👥 العملاء: 120 | 🏪 المتاجر: 18 | 🛵 المندوبين: 12 | 📦 الطلبات اليوم: 34</p><p>المدفوعات: 245 ر.ع اليوم</p>';}
-renderCats();renderStores();document.getElementById('featured').innerHTML=stores.slice(0,4).map(s=>`<div class="store" onclick="openStore(${s.id})"><img src="${s.img}"><div><b>${s.name}</b><p class="small">${s.desc}</p></div></div>`).join('');
+let products=[
+{id:1,name:"كريم ترطيب",price:5.0,img:"https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=600"},
+{id:2,name:"مجبوس دجاج",price:2.5,img:"https://images.unsplash.com/photo-1512058564366-18510be2db19?w=600"},
+{id:3,name:"باقة ورد",price:8.0,img:"https://images.unsplash.com/photo-1561181286-d3fee7d55364?w=600"},
+{id:4,name:"كيكة عسل",price:5.5,img:"https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600"},
+];
+let cart=[];
+function render(){
+document.getElementById('cats').innerHTML=cats.map(c=>`<button class="${c==active?'active':''}" onclick="setCat('${c}')">${c}</button>`).join('');
+let q=document.getElementById('search').value||"";
+let fs=stores.filter(s=>(active=="الكل"||s.cat==active)&&s.name.includes(q));
+document.getElementById('stores').innerHTML=fs.map(s=>`<div class="store"><h3>${s.name}</h3><p>${s.desc}</p><button class="enter" onclick="alert('دخلت ${s.name}')">ادخل المتجر</button></div>`).join('');
+document.getElementById('products').innerHTML=products.map(p=>`<div class="card"><img src="${p.img}"><h4>${p.name}</h4><b>${p.price.toFixed(3)} ر.ع</b><br><button class="add" onclick="add(${p.id})">+ إضافة</button></div>`).join('');
+}
+function setCat(c){active=c;render();}
+function add(id){let f=cart.find(x=>x.id==id);if(f)f.qty++;else{let p=products.find(x=>x.id==id);cart.push({...p,qty:1});}document.getElementById('count').innerText=cart.reduce((a,b)=>a+b.qty,0);alert("تمت الإضافة ✅");}
+function showCart(){document.getElementById('cartPage').style.display='block';window.scrollTo(0,0);let s=0;document.getElementById('cartItems').innerHTML=cart.map((it,i)=>{s+=it.price*it.qty;return `<div class="item"><span>${it.name} × ${it.qty}</span><b>${(it.price*it.qty).toFixed(3)} ر.ع</b></div>`}).join('')||"سلتك فاضية";document.getElementById('total').innerText=`الإجمالي مع التوصيل: ${(s+1).toFixed(3)} ر.ع`;}
+function goHome(){document.getElementById('cartPage').style.display='none';document.getElementById('checkoutPage').style.display='none';document.getElementById('donePage').style.display='none';}
+function showCheckout(){if(!cart.length){alert("سلتك فاضية");return;}document.getElementById('cartPage').style.display='none';document.getElementById('checkoutPage').style.display='block';let s=cart.reduce((a,b)=>a+b.price*b.qty,0);document.getElementById('final').innerText=`الإجمالي: ${(s+1).toFixed(3)} ر.ع`;}
+document.getElementById('pay').addEventListener('change',e=>{document.getElementById('receipt').style.display=e.target.value.includes('عند الاستلام')?'none':'block';});
+function confirmOrder(){let n=document.getElementById('n').value,p=document.getElementById('p').value,a=document.getElementById('a').value;if(!n||!p||!a){alert("عبي كل البيانات");return;}document.getElementById('checkoutPage').style.display='none';document.getElementById('donePage').style.display='block';document.getElementById('orderNo').innerText="رقم الطلب: DARB-"+Math.floor(1000+Math.random()*9000);document.getElementById('orderDet').innerText=`شكراً ${n} ❤️ بيوصلك طلبك على ${a}`;cart=[];document.getElementById('count').innerText="0";}
+render();
 </script>
 </body>
 </html>
