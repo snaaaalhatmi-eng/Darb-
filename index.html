@@ -16,6 +16,7 @@ button{background:#2e5a4a;color:white;border:none;padding:10px 18px;border-radiu
 .product img{width:100%;max-width:300px;border-radius:12px}
 footer{background:#1e3a2f;color:white;padding:20px;margin-top:20px}
 input,select{padding:12px;width:92%;border-radius:10px;border:1px solid #ccc;margin-bottom:10px;box-sizing:border-box}
+input.readonly-input{background:#eee;color:#333;font-weight:bold}
 .qty-box{display:flex;align-items:center;justify-content:center;gap:10px;margin:10px 0}
 .qty-btn{width:40px;height:40px;font-size:22px;padding:0;background:#1e3a2f;border-radius:50%}
 .qty-num{font-size:20px;font-weight:bold;min-width:30px}
@@ -27,9 +28,15 @@ input,select{padding:12px;width:92%;border-radius:10px;border:1px solid #ccc;mar
 .bell-badge{position:absolute;top:-5px;right:-5px;background:red;color:white;font-size:12px;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}
 .notif-panel{display:none;position:fixed;top:60px;left:10px;right:10px;background:white;color:#333;border-radius:15px;padding:15px;z-index:100;box-shadow:0 5px 20px rgba(0,0,0,0.3);text-align:right;max-height:70vh;overflow:auto}
 .order-card{background:#f9f9f9;border:1px solid #eee;border-radius:12px;padding:12px;margin-bottom:10px;font-size:14px}
+.receipt-btn{display:block;background:#1e3a2f;color:white;text-align:center;padding:13px;border-radius:12px;font-weight:bold;cursor:pointer;margin-top:12px}
+.receipt-preview{width:100%;max-width:300px;border-radius:12px;margin-top:10px;display:none;border:2px solid #4CAF50}
+.receipt-required{color:#c62828;font-size:13px;font-weight:bold;text-align:center}
+.toast{display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#333;color:white;padding:12px 20px;border-radius:12px;z-index:999;font-size:15px;max-width:90%;text-align:center}
+.error-msg{color:#c62828;font-size:13px;font-weight:bold;display:none;text-align:center}
 </style>
 </head>
 <body>
+<div id="toast" class="toast"></div>
 
 <header>
 <h1>دَرْب | DARB</h1>
@@ -40,9 +47,10 @@ input,select{padding:12px;width:92%;border-radius:10px;border:1px solid #ccc;mar
     <b>👤 تسجيل الدخول</b><br>
     <span style="font-size:12px; color:#888;">سجلي دخولج عشان نعرفج ونسهل عليج الطلب</span><br><br>
     <input id="loginName" type="text" placeholder="كتابة الاسم الثلاثي .." style="width:100%;">
-    <input id="loginPhone" type="text" placeholder="رقم الهاتف" style="width:100%;">
+    <input id="loginPhone" type="tel" placeholder="رقم الهاتف العماني - 8 أرقام تبدأ بـ 9 مثال: 94116067" style="width:100%;direction:ltr;text-align:right;" maxlength="8" inputmode="numeric">
+    <p id="loginPhoneError" class="error-msg">⚠️ الرقم غلط! لازم 8 أرقام فقط، تبدأ بـ 9 أو 7، بدون حروف</p>
     <button onclick="doLogin()" style="width:100%; background:#1e3a2f;">دخول ✅</button>
-    <p style="font-size:12px; color:#c62828; text-align:center;">* يجب كتابة الاسم الثلاثي</p>
+    <p style="font-size:12px; color:#c62828; text-align:center;">* يجب كتابة الاسم الثلاثي + رقم عماني صحيح</p>
   </div>
   <div id="welcomeBox" style="display:none; text-align:center;">
     <b>أهلاً <span id="welcomeName"></span> 👋</b><br>
@@ -54,12 +62,13 @@ input,select{padding:12px;width:92%;border-radius:10px;border:1px solid #ccc;mar
 
 <div id="notifPanel" class="notif-panel">
   <div style="display:flex;justify-content:space-between;align-items:center;">
-    <h3 style="margin:0;">🔔 الإشعارات / الطلبات المحفوظة</h3>
+    <h3 style="margin:0;">🔔 طلباتي الخاصة</h3>
     <button onclick="closeNotif()" style="background:#c62828;">✕</button>
   </div>
+  <p id="notifUserText" style="font-size:13px;color:#1e3a2f;font-weight:bold;"></p>
   <p id="notifCountText" style="font-size:13px;color:#888;"></p>
   <div id="notifList"></div>
-  <button onclick="clearOrders()" style="background:#c62828;width:100%;">🗑️ مسح كل الطلبات</button>
+  <button onclick="clearMyOrders()" style="background:#c62828;width:100%;">🗑️ مسح طلباتي فقط</button>
 </div>
 
 <div id="successMsg" style="display:none; background:#e8f5e9; padding:20px; border-radius:15px; margin:15px; text-align:center; font-size:18px; font-weight:bold; border:1px solid #a5d6a7;">
@@ -71,7 +80,7 @@ input,select{padding:12px;width:92%;border-radius:10px;border:1px solid #ccc;mar
 <span>
 <button onclick="openNotif()" class="bell">🔔 <span id="bellBadge" class="bell-badge" style="display:none;">0</span></button>
 <button onclick="openNotif()">📂 طلباتي</button>
-<button onclick="orderNow()">اطلب الحين</button>
+<button onclick="openStore('Maith')">🛍️ تسوقي الحين</button>
 </span>
 </div>
 
@@ -129,7 +138,6 @@ input,select{padding:12px;width:92%;border-radius:10px;border:1px solid #ccc;mar
 <button onclick="addToCart('المقشر الكريمي',3.9,'qty3')">أضف للسلة</button>
 </div>
 
-<!-- 🛒 سلة المنتجات -->
 <div style="background:white; padding:15px; border-radius:15px; margin:15px; text-align:right; direction:rtl;">
   <h3 style="margin:0 0 12px 0;">🛒 سلة المنتجات</h3>
   <div id="cartItems"><p style="color:#888; text-align:center;">السلة فاضية، أضيفي منتجات من فوق 👆</p></div>
@@ -141,7 +149,6 @@ input,select{padding:12px;width:92%;border-radius:10px;border:1px solid #ccc;mar
   </div>
 </div>
 
-<!-- 🚚 نوع الشحن - قريب من السلة -->
 <div style="background:white; padding:15px; border-radius:15px; margin:15px; text-align:right; direction:rtl;">
   <h3 style="margin:0 0 12px 0;">🚚 نوع الشحن</h3>
   <label style="display:flex; justify-content:space-between; align-items:center; border:1px solid #ddd; padding:14px; border-radius:12px; margin-bottom:10px; cursor:pointer;">
@@ -154,41 +161,38 @@ input,select{padding:12px;width:92%;border-radius:10px;border:1px solid #ccc;mar
   </label>
 </div>
 
-<!-- طريقة الدفع -->
+<!-- طريقة الدفع - إجبارية عن طريق الهاتف فقط -->
 <div style="background:white; padding:15px; border-radius:15px; margin:15px; text-align:right; direction:rtl;">
   <h3 style="display:flex; justify-content:space-between; align-items:center; margin:0 0 15px 0;">الدفع <span style="background:#4CAF50; color:white; border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; font-size:14px;">✓</span></h3>
-  <label style="display:flex; justify-content:space-between; align-items:center; border:1px solid #ddd; padding:14px; border-radius:12px; margin-bottom:10px; cursor:pointer;">
-    <span>💳 تحويل بنكي</span>
-    <input type="radio" name="payment" value="تحويل بنكي" style="width:20px; height:20px;" onclick="showPayInfo('bank')">
-  </label>
-  <label style="display:flex; justify-content:space-between; align-items:center; border:1px solid #ddd; padding:14px; border-radius:12px; margin-bottom:10px; cursor:pointer;">
-    <span>📱 الدفع عن طريق رقم الهاتف</span>
-    <input type="radio" name="payment" value="الدفع عن طريق رقم الهاتف" id="payPhoneRadio" style="width:20px; height:20px;" onclick="showPayInfo('phonePay')">
-  </label>
-  <label style="display:flex; justify-content:space-between; align-items:center; border:1px solid #ddd; padding:14px; border-radius:12px; cursor:pointer;">
-    <span>💵 الدفع عند الاستلام</span>
-    <input type="radio" name="payment" value="الدفع عند الاستلام" id="payCashRadio" checked style="width:20px; height:20px;" onclick="showPayInfo('cash')">
-  </label>
-  <div id="pay-bank" style="display:none; background:#f0f7f2; padding:12px; border-radius:10px; margin-top:10px; font-size:14px;">
-    <b>💳 التحويل البنكي:</b><br>حولي المبلغ على الحساب التالي وارسلي لنا صورة التحويل<br><b>اسم البنك:</b> اكتبي اسم البنك هنا<br><b>رقم الحساب:</b> اكتبي رقم الحساب هنا
+  <p style="font-size:13px;color:#c62828;font-weight:bold;text-align:center;">* الدفع إجباري عن طريق رقم الهاتف فقط *</p>
+  <div style="display:flex; justify-content:space-between; align-items:center; border:2px solid #4CAF50; background:#e8f5e9; padding:14px; border-radius:12px; margin-bottom:10px;">
+    <span>📱 الدفع عن طريق رقم الهاتف ✅</span>
+    <span style="background:#4CAF50;color:white;padding:4px 10px;border-radius:10px;font-size:12px;">إجباري</span>
   </div>
-  <div id="pay-phonePay" style="display:none; background:#fff8e1; padding:12px; border-radius:10px; margin-top:10px; font-size:14px;">
-    <b>📱 الدفع عن طريق رقم الهاتف:</b><br>حولي المبلغ على هذا الرقم:<br><b style="font-size:18px;">94116067</b><br>وبعد التحويل ارسلي لنا صورة التحويل
+  <input type="hidden" name="payment" value="الدفع عن طريق رقم الهاتف">
+  <div id="pay-phonePay" style="display:block; background:#fff8e1; padding:12px; border-radius:10px; margin-top:10px; font-size:14px;">
+    <b>📱 الدفع عن طريق رقم الهاتف:</b><br>حولي المبلغ على هذا الرقم:<br><b style="font-size:22px;">94116067</b><br>وبعد التحويل ارسلي لنا صورة التحويل
+    <p class="receipt-required">* صورة الإيصال إجبارية *</p>
+    <label for="receiptInput" class="receipt-btn">📸 إضافة صورة الإيصال * إجباري</label>
+    <input type="file" id="receiptInput" accept="image/*" style="display:none;" onchange="previewReceipt(this)">
+    <img id="receiptPreview" class="receipt-preview">
+    <p id="receiptMsg" style="display:none; color:#2e7d32; font-weight:bold; text-align:center;">✅ تم إضافة صورة الإيصال، شكراً لك!</p>
+    <p id="receiptError" style="display:none; color:#c62828; font-weight:bold; text-align:center;">⚠️ لازم ترفعين صورة الإيصال قبل ما ترسلين الطلب</p>
+    <p style="font-size:12px; color:#888; text-align:center;">بعد ما ترسلين الطلب في الواتساب، ارسلي صورة الإيصال في نفس المحادثة</p>
   </div>
-  <div id="pay-cash" style="display:block; background:#f9f9f9; padding:12px; border-radius:10px; margin-top:10px; font-size:14px;">💵 ادفعي عند استلام طلبج</div>
   <button class="pay-action-btn" onclick="confirmPaid()" style="background:#4CAF50;">✅ تم دفع المبلغ</button>
-  <button class="pay-action-btn" onclick="payAfterDelivery()" style="background:#ff9800;">📦 الدفع بعد استلام الطلب</button>
   <div id="payConfirmMsg" style="display:none; text-align:center; padding:10px; border-radius:10px; margin-top:10px; font-weight:bold;"></div>
   <p style="font-size:12px; color:#888; text-align:center; margin-top:12px;">آمن ومشفر | بالمتابعة توافق على شروط الخدمة</p>
 </div>
 
 <div style="background:white; padding:15px; border-radius:15px; margin:15px; text-align:right; direction:rtl;">
   <h3 style="margin:0 0 12px 0;">👤 بيانات الزبون</h3>
-  <label>الاسم الثلاثي *</label>
-  <input id="customerName" type="text" placeholder="كتابة الاسم الثلاثي ..">
-  <span style="font-size:12px; color:#c62828;">* يجب كتابة الاسم الثلاثي كاملاً</span><br><br>
-  <label>رقم هاتف الزبونة *</label>
-  <input id="phone" type="text" placeholder="رقم الهاتف">
+  <label>الاسم الثلاثي * - ثابت من تسجيل الدخول</label>
+  <input id="customerName" type="text" placeholder="سجلي دخولج أولاً" class="readonly-input" readonly>
+  <span style="font-size:12px; color:#c62828;">* يجب كتابة الاسم الثلاثي كاملاً في تسجيل الدخول</span><br><br>
+  <label>رقم هاتف الزبونة * - ثابت، ما يتغير في الطلب</label>
+  <input id="phone" type="text" placeholder="سجلي دخولج أولاً" class="readonly-input" readonly>
+  <p style="font-size:12px;color:#2e7d32;">🔒 الرقم مقفل على رقم تسجيل الدخول، ما يقدر الزبون يغيره لرقم وهمي</p>
   <h3 style="margin:15px 0 12px 0;">📍 عنوان التوصيل</h3>
   <label>البلد</label>
   <select id="country"><option>عُمان</option><option>الإمارات</option><option>السعودية</option></select>
@@ -214,6 +218,44 @@ input,select{padding:12px;width:92%;border-radius:10px;border:1px solid #ccc;mar
 <script>
 let cart = [];
 let payStatus = 'لم يتم تحديد حالة الدفع';
+let receiptPhoneAdded = false;
+function normalizePhone(raw){
+  if(!raw) return '';
+  let s = String(raw).trim();
+  const map = {'٠':'0','١':'1','٢':'2','٣':'3','٤':'4','٥':'5','٦':'6','٧':'7','٨':'8','٩':'9','۰':'0','۱':'1','۲':'2','۳':'3','۴':'4','۵':'5','۶':'6','۷':'7','۸':'8','۹':'9'};
+  s = s.split('').map(c=> map[c] || c).join('');
+  s = s.replace(/[\s\-\(\)]/g,'');
+  if(s.startsWith('+968')) s = s.slice(4);
+  if(s.startsWith('968') && s.length==11) s = s.slice(3);
+  return s;
+}
+function isValidOmaniPhone(raw){
+  let s = normalizePhone(raw);
+  if(!/^[0-9]+$/.test(s)) return {valid:false, clean:''};
+  if(s.length !== 8) return {valid:false, clean:s};
+  if(!/^[978]/.test(s)) return {valid:false, clean:s};
+  return {valid:true, clean:s};
+}
+function showToast(msg){
+  let t = document.getElementById('toast');
+  t.innerText = msg;
+  t.style.display = 'block';
+  setTimeout(()=>{ t.style.display='none'; }, 3500);
+}
+function previewReceipt(input){
+  let file = input.files[0];
+  if(!file) return;
+  let reader = new FileReader();
+  reader.onload = function(e){
+    let img = document.getElementById('receiptPreview');
+    img.src = e.target.result;
+    img.style.display = 'block';
+    document.getElementById('receiptMsg').style.display = 'block';
+    document.getElementById('receiptError').style.display='none';
+    receiptPhoneAdded = true;
+  };
+  reader.readAsDataURL(file);
+}
 const wilayasByGov = {
 "مسقط":["مسقط","السيب","بوشر","مطرح","العامرات","قريات"],
 "ظفار":["صلالة","طاقة","مرباط","سدح","رخيوت","ضلكوت","مقشن","شليم وجزر الحلانيات","ثمريت","المزيونة"],
@@ -227,34 +269,115 @@ const wilayasByGov = {
 "الظاهرة":["عبري","ينقل","ضنك"],
 "الوسطى":["هيما","محوت","الدقم","الجازر"]
 };
-function getOrders(){try{return JSON.parse(localStorage.getItem('darb_orders')||'[]')}catch(e){return []}}
-function saveOrder(order){let arr = getOrders();arr.unshift(order);localStorage.setItem('darb_orders', JSON.stringify(arr));let unread = parseInt(localStorage.getItem('darb_unread')||'0')+1;localStorage.setItem('darb_unread', unread);updateBell();}
-function updateBell(){let unread = parseInt(localStorage.getItem('darb_unread')||'0');let badge = document.getElementById('bellBadge');if(unread>0){badge.style.display='flex';badge.innerText=unread;}else{badge.style.display='none';}}
-function openNotif(){let arr = getOrders();document.getElementById('notifPanel').style.display='block';document.getElementById('notifCountText').innerText = 'عندج '+arr.length+' طلب محفوظ';let list = document.getElementById('notifList');if(arr.length==0){list.innerHTML='<p style="text-align:center;color:#888;">لا توجد طلبات بعد</p>';}else{list.innerHTML = arr.map((o,i)=>'<div class="order-card"><b>🔔 طلب #'+(arr.length-i)+'</b> <span style="color:#888;font-size:12px;">'+o.date+'</span><br><b>👤 '+o.name+'</b> - 📞 '+o.phone+'<br>'+o.items.join('<br>')+'<br><b>المجموع: '+o.total+' ر.ع</b><br>🚚 '+o.shipType+' - '+o.ship+' ر.ع<br>💳 '+o.pay+' - '+o.payStatus+'<br>📍 '+o.gov+' - '+o.wilaya+' - '+o.area+'<br><button onclick="reorder('+i+')" style="background:#25D366;padding:6px 12px;font-size:13px;">إعادة إرسال واتساب</button></div>').join('');}localStorage.setItem('darb_unread','0');updateBell();}
+function getCurrentUser(){ let n = localStorage.getItem('darb_name') || ''; let p = localStorage.getItem('darb_phone') || ''; return {name:n, phone:p}; }
+function getAllOrders(){try{return JSON.parse(localStorage.getItem('darb_orders')||'[]')}catch(e){return []}}
+function getMyOrders(){ let user = getCurrentUser(); if(!user.phone) return []; return getAllOrders().filter(o => o.phone === user.phone); }
+function checkSpam(phone){
+  let all = getAllOrders().filter(o=> o.phone===phone);
+  let now = Date.now();
+  let recent = all.filter(o=>{ if(!o.timestamp) return false; return (now - o.timestamp) < 60*60*1000; });
+  if(recent.length >= 3){ return {blocked:true}; }
+  let last = all[0];
+  if(last && last.timestamp && (now - last.timestamp) < 2*60*1000){ return {blocked:true, tooFast:true}; }
+  return {blocked:false};
+}
+function saveOrder(order){ let arr = getAllOrders(); arr.unshift(order); localStorage.setItem('darb_orders', JSON.stringify(arr)); let user = getCurrentUser(); let key = 'darb_unread_' + (user.phone || 'guest'); let unread = parseInt(localStorage.getItem(key)||'0')+1; localStorage.setItem(key, unread); updateBell(); }
+function updateBell(){ let user = getCurrentUser(); let key = 'darb_unread_' + (user.phone || 'guest'); let unread = parseInt(localStorage.getItem(key)||'0'); let badge = document.getElementById('bellBadge'); if(unread>0 && user.phone){badge.style.display='flex';badge.innerText=unread;}else{badge.style.display='none';} }
+function openNotif(){ let user = getCurrentUser(); if(!user.phone){ showToast('⚠️ سجلي دخولج أولاً عشان تشوفين طلباتج الخاصة'); window.scrollTo(0,0); return; } let arr = getMyOrders(); document.getElementById('notifPanel').style.display='block'; document.getElementById('notifUserText').innerText = '👤 ' + user.name + ' - 📞 ' + user.phone; document.getElementById('notifCountText').innerText = 'عندج ' + arr.length + ' طلب خاص فيج'; let list = document.getElementById('notifList'); if(arr.length==0){ list.innerHTML='<p style="text-align:center;color:#888;">ما عندج طلبات بعد، اطلبي الحين 💖</p>'; }else{ list.innerHTML = arr.map((o,i)=>'<div class="order-card"><b>🔔 طلب #'+(arr.length-i)+'</b> <span style="color:#888;font-size:12px;">'+o.date+'</span><br><b>👤 '+o.name+'</b> - 📞 '+o.phone+'<br>'+o.items.join('<br>')+'<br><b>المجموع: '+o.total+' ر.ع</b><br>🚚 '+o.shipType+' - '+o.ship+' ر.ع<br>💳 '+o.pay+' - '+o.payStatus+'<br>🧾 الإيصال: '+(o.receipt ? 'تم إرفاق صورة الإيصال ✅' : 'بدون إيصال')+'<br>📍 '+o.gov+' - '+o.wilaya+' - '+o.area+'<br><button onclick="reorderMy('+i+')" style="background:#25D366;padding:6px 12px;font-size:13px;">إعادة إرسال واتساب</button></div>').join(''); } let key = 'darb_unread_' + user.phone; localStorage.setItem(key,'0'); updateBell(); }
 function closeNotif(){document.getElementById('notifPanel').style.display='none';}
-function clearOrders(){if(confirm('متأكدة تمسحين كل الطلبات؟')){localStorage.removeItem('darb_orders');localStorage.setItem('darb_unread','0');openNotif();}}
-function reorder(i){let arr=getOrders();let o=arr[i];let msg='🛍️ طلب جديد من متجر ميث - DARB\n\n👤 الاسم الثلاثي: '+o.name+'\n📞 رقم هاتف الزبونة: '+o.phone+'\n\n'+o.items.join('\n')+'\n\nالمجموع الكلي: '+o.total+' ر.ع\n\nطريقة الدفع: '+o.pay+'\n📍 '+o.gov+' - '+o.wilaya+' - '+o.area;window.open('https://wa.me/96894116067?text='+encodeURIComponent(msg),'_blank');}
+function clearMyOrders(){ let user = getCurrentUser(); if(!user.phone) return; if(confirm('متأكدة تمسحين طلباتج انتي فقط؟')){ let all = getAllOrders(); let rest = all.filter(o => o.phone !== user.phone); localStorage.setItem('darb_orders', JSON.stringify(rest)); localStorage.setItem('darb_unread_' + user.phone,'0'); openNotif(); } }
+function reorderMy(i){ let arr = getMyOrders(); let o = arr[i]; if(!o) return; let msg='🛍️ طلب جديد من متجر ميث - DARB\n\n👤 الاسم الثلاثي: '+o.name+'\n📞 رقم هاتف الزبونة: '+o.phone+'\n\n'+o.items.join('\n')+'\n\nالمجموع الكلي: '+o.total+' ر.ع\n\nطريقة الدفع: '+o.pay+'\n📍 '+o.gov+' - '+o.wilaya+' - '+o.area; window.open('https://wa.me/96894116067?text='+encodeURIComponent(msg),'_blank'); }
 updateBell();
 function isTripleName(name){let parts = name.trim().split(/\s+/);return parts.length >= 3 && parts.every(p => p.length >= 2);}
-function checkLogin(){let n = localStorage.getItem('darb_name');let p = localStorage.getItem('darb_phone');if(n && p){document.getElementById('loginForm').style.display='none';document.getElementById('welcomeBox').style.display='block';document.getElementById('welcomeName').innerText = n;document.getElementById('welcomePhone').innerText = p;document.getElementById('customerName').value = n;document.getElementById('phone').value = p;}}
-function doLogin(){let n = document.getElementById('loginName').value.trim();let p = document.getElementById('loginPhone').value.trim();if(!n){ alert('اكتبي اسمج لو سمحتي'); return; }if(!isTripleName(n)){ alert('⚠️ يجب كتابة الاسم الثلاثي كاملاً\nمثال: مريم محمد البلوشية'); return; }if(!p){ alert('اكتبي رقم هاتفج لو سمحتي'); return; }localStorage.setItem('darb_name', n);localStorage.setItem('darb_phone', p);checkLogin();alert('أهلاً ' + n + ' 👋 تم تسجيل دخولج');}
-function doLogout(){localStorage.removeItem('darb_name');localStorage.removeItem('darb_phone');document.getElementById('loginForm').style.display='block';document.getElementById('welcomeBox').style.display='none';document.getElementById('customerName').value='';document.getElementById('phone').value='';}
+function checkLogin(){let n = localStorage.getItem('darb_name');let p = localStorage.getItem('darb_phone');if(n && p){document.getElementById('loginForm').style.display='none';document.getElementById('welcomeBox').style.display='block';document.getElementById('welcomeName').innerText = n;document.getElementById('welcomePhone').innerText = p;document.getElementById('customerName').value = n;document.getElementById('phone').value = p;} updateBell();}
+document.getElementById('loginPhone').addEventListener('input', function(){
+  let v = this.value;
+  const map = {'٠':'0','١':'1','٢':'2','٣':'3','٤':'4','٥':'5','٦':'6','٧':'7','٨':'8','٩':'9','۰':'0','۱':'1','۲':'2','۳':'3','۴':'4','۵':'5','۶':'6','۷':'7','۸':'8','۹':'9'};
+  v = v.split('').map(c=> map[c] || c).join('');
+  v = v.replace(/[^0-9]/g,'').slice(0,8);
+  this.value = v;
+  let check = isValidOmaniPhone(v);
+  if(v.length==8 && !check.valid){ document.getElementById('loginPhoneError').style.display='block'; }
+  else { document.getElementById('loginPhoneError').style.display='none'; }
+});
+function doLogin(){
+  let n = document.getElementById('loginName').value.trim();
+  let pRaw = document.getElementById('loginPhone').value.trim();
+  if(!n){ showToast('اكتبي اسمج لو سمحتي'); return; }
+  if(!isTripleName(n)){ showToast('⚠️ يجب كتابة الاسم الثلاثي كاملاً'); return; }
+  let check = isValidOmaniPhone(pRaw);
+  if(!check.valid){
+    document.getElementById('loginPhoneError').style.display='block';
+    showToast('⚠️ الرقم غلط! لازم 8 أرقام فقط، تبدأ بـ 9 أو 7، مثال: 94116067');
+    return;
+  }
+  document.getElementById('loginPhoneError').style.display='none';
+  localStorage.setItem('darb_name', n);
+  localStorage.setItem('darb_phone', check.clean);
+  checkLogin();
+  showToast('أهلاً ' + n + ' 👋 تم تسجيل دخولج');
+}
+function doLogout(){localStorage.removeItem('darb_name');localStorage.removeItem('darb_phone');document.getElementById('loginForm').style.display='block';document.getElementById('welcomeBox').style.display='none';document.getElementById('customerName').value='';document.getElementById('phone').value=''; updateBell();}
 checkLogin();
 function getShipping(){let s = document.querySelector('input[name="shipping"]:checked');if(!s) return 2;return s.value === 'للمكتب' ? 1 : 2;}
 function getTotals(){let sub = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);let vat = sub * 0.05;let ship = cart.length==0 ? 0 : getShipping();let total = sub + vat + ship;return {sub:sub, vat:vat, ship:ship, total:total};}
 function updateWilaya(){let gov = document.getElementById('governorate').value;let w = document.getElementById('wilaya');w.innerHTML = '';wilayasByGov[gov].forEach(x=>{let o = document.createElement('option'); o.text = x; w.add(o);});}
 updateWilaya();
-function showPayInfo(type){document.getElementById('pay-bank').style.display = type=='bank' ? 'block' : 'none';document.getElementById('pay-phonePay').style.display = type=='phonePay' ? 'block' : 'none';document.getElementById('pay-cash').style.display = type=='cash' ? 'block' : 'none';}
-function confirmPaid(){document.getElementById('payPhoneRadio').checked = true;showPayInfo('phonePay');payStatus = 'تم دفع المبلغ ✅';let m = document.getElementById('payConfirmMsg');m.style.display = 'block';m.style.background = '#e8f5e9';m.style.color = '#2e7d32';m.innerText = '✅ تم تأكيد دفع المبلغ، شكراً لك! كملي طلبك بالضغط على إرسال الطلب بالأسفل';}
-function payAfterDelivery(){document.getElementById('payCashRadio').checked = true;showPayInfo('cash');payStatus = 'الدفع بعد استلام الطلب 📦';let m = document.getElementById('payConfirmMsg');m.style.display = 'block';m.style.background = '#fff3e0';m.style.color = '#e65100';m.innerText = '📦 تم اختيار الدفع بعد استلام الطلب، كملي طلبك بالضغط على إرسال الطلب بالأسفل';}
+function confirmPaid(){
+  if(!receiptPhoneAdded){ document.getElementById('receiptError').style.display='block'; showToast('⚠️ لازم ترفعين صورة الإيصال أولاً'); return; }
+  payStatus = 'تم دفع المبلغ ✅';let m = document.getElementById('payConfirmMsg');m.style.display = 'block';m.style.background = '#e8f5e9';m.style.color = '#2e7d32';m.innerText = '✅ تم تأكيد دفع المبلغ، شكراً لك! كملي طلبك بالضغط على إرسال الطلب بالأسفل';
+}
 function filterCat(cat, btn){document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('#stores .store').forEach(s=>{if(cat=='الكل' || s.getAttribute('data-category')==cat){ s.style.display='block'; } else { s.style.display='none'; }});}
 function openStore(name){document.getElementById('home').style.display='none';document.getElementById('store-'+name).style.display='block';window.scrollTo(0,0);}
 function backToStores(){document.getElementById('home').style.display='block';document.getElementById('store-Maith').style.display='none';}
 function changeQty(id, change){let el = document.getElementById(id);let val = parseInt(el.innerText) + change;if(val < 1) val = 1;if(val > 99) val = 99;el.innerText = val;}
-function addToCart(name, price, qtyId){let qty = parseInt(document.getElementById(qtyId).innerText);cart.push({name:name, price:price, qty:qty});updateCartDisplay();alert('تمت إضافة ' + qty + ' × ' + name + ' للسلة');document.getElementById(qtyId).innerText = '1';}
+function addToCart(name, price, qtyId){let qty = parseInt(document.getElementById(qtyId).innerText);cart.push({name:name, price:price, qty:qty});updateCartDisplay();showToast('تمت إضافة ' + qty + ' × ' + name + ' للسلة ✅');document.getElementById(qtyId).innerText = '1';}
 function updateCartDisplay(){let totalQty = cart.reduce((sum, item) => sum + item.qty, 0);document.getElementById('cartCount').innerText = totalQty;let box = document.getElementById('cartItems');let totalBox = document.getElementById('cartTotal');if(cart.length==0){box.innerHTML = '<p style="color:#888; text-align:center;">السلة فاضية، أضيفي منتجات من فوق 👆</p>';totalBox.style.display = 'none';return;}let html = '';cart.forEach((item, index)=>{html += '<div class="cart-item"><div><b>' + item.name + '</b><br><span style="color:#888; font-size:13px;">' + item.qty + ' × ' + item.price.toFixed(3) + ' ر.ع</span></div><div><b>' + (item.price * item.qty).toFixed(3) + ' ر.ع</b><br><button onclick="removeItem(' + index + ')" style="background:#c62828; padding:5px 10px; font-size:12px;">حذف ❌</button></div></div>';});box.innerHTML = html;let t = getTotals();document.getElementById('subTotalPrice').innerText = t.sub.toFixed(3) + ' ر.ع';document.getElementById('vatPrice').innerText = t.vat.toFixed(3) + ' ر.ع';document.getElementById('shippingPrice').innerText = t.ship.toFixed(3) + ' ر.ع';document.getElementById('totalPrice').innerText = t.total.toFixed(3) + ' ر.ع';totalBox.style.display = 'block';}
 function removeItem(index){cart.splice(index,1);updateCartDisplay();}
-function orderNow(){if(cart.length==0){ alert('السلة فاضية'); return; }let custName = document.getElementById('customerName').value.trim();let phone = document.getElementById('phone').value.trim();if(!custName){ alert('اكتبي اسمج الثلاثي لو سمحتي'); return; }if(!isTripleName(custName)){ alert('⚠️ يجب كتابة الاسم الثلاثي كاملاً\nمثال: مريم محمد البلوشية'); return; }if(!phone){ alert('اكتبي رقم هاتفج لو سمحتي'); return; }let pay = document.querySelector('input[name="payment"]:checked').value;let shipType = document.querySelector('input[name="shipping"]:checked').value;let country = document.getElementById('country').value;let gov = document.getElementById('governorate').value;let wilaya = document.getElementById('wilaya').value;let area = document.getElementById('area').value;if(!area){ alert('اكتبي المنطقة لو سمحتي'); return; }let items = cart.map(i => i.qty + ' × ' + i.name + ' : ' + (i.price * i.qty).toFixed(3) + ' ر.ع');let t = getTotals();saveOrder({name:custName, phone:phone, items:items, sub:t.sub.toFixed(3), vat:t.vat.toFixed(3), ship:t.ship.toFixed(3), total:t.total.toFixed(3), pay:pay, payStatus:payStatus, shipType:shipType, country:country, gov:gov, wilaya:wilaya, area:area, date:new Date().toLocaleString('ar-OM')});let msg = '🛍️ طلب جديد من متجر ميث - DARB\n\n👤 الاسم الثلاثي: ' + custName + '\n📞 رقم هاتف الزبونة: ' + phone + '\n\n' + items.join('\n') + '\n\nالمجموع الفرعي: ' + t.sub.toFixed(3) + ' ر.ع\nضريبة القيمة المضافة (5%): ' + t.vat.toFixed(3) + ' ر.ع\n🚚 نوع الشحن: ' + shipType + '\n🚚 قيمة الشحن: ' + t.ship.toFixed(3) + ' ر.ع\nالمجموع الكلي: ' + t.total.toFixed(3) + ' ر.ع\n\nطريقة الدفع: ' + pay + '\nحالة الدفع: ' + payStatus + '\n\n📍 عنوان التوصيل:\nالبلد: ' + country + '\nالمحافظة: ' + gov + '\nالولاية: ' + wilaya + '\nالمنطقة: ' + area;let url = 'https://wa.me/96894116067?text=' + encodeURIComponent(msg);window.open(url, '_blank');cart = [];updateCartDisplay();document.getElementById('successMsg').style.display = 'block';window.scrollTo(0,0);}
+function orderNow(){
+  if(cart.length==0){ showToast('🛒 السلة فاضية، اختاري منتج أولاً'); openStore('Maith'); return; }
+  let user = getCurrentUser();
+  if(!user.phone || !isValidOmaniPhone(user.phone).valid){
+    showToast('⚠️ سجلي دخولج برقم عماني صحيح أولاً');
+    window.scrollTo(0,0);
+    return;
+  }
+  let custName = user.name;
+  let phone = user.phone;
+  document.getElementById('customerName').value = custName;
+  document.getElementById('phone').value = phone;
+  if(!isTripleName(custName)){ showToast('⚠️ يجب كتابة الاسم الثلاثي كاملاً'); return; }
+  // ✅ الدفع إجباري عن طريق الهاتف + الإيصال إجباري
+  let pay = 'الدفع عن طريق رقم الهاتف';
+  if(!receiptPhoneAdded){
+    document.getElementById('receiptError').style.display='block';
+    showToast('⚠️ لازم ترفعين صورة الإيصال أولاً');
+    document.getElementById('pay-phonePay').scrollIntoView({behavior:'smooth'});
+    return;
+  }
+  let spam = checkSpam(phone);
+  if(spam.blocked){
+    if(spam.tooFast){ showToast('⏳ انتظري دقيقتين قبل ما ترسلين طلب ثاني'); }
+    else { showToast('⛔ وصلتي حد الطلبات - 3 طلبات في ساعة، انتظري شوي'); }
+    return;
+  }
+  let shipType = document.querySelector('input[name="shipping"]:checked').value;
+  let country = document.getElementById('country').value;
+  let gov = document.getElementById('governorate').value;
+  let wilaya = document.getElementById('wilaya').value;
+  let area = document.getElementById('area').value;
+  if(!area){ showToast('اكتبي المنطقة لو سمحتي'); return; }
+  let items = cart.map(i => i.qty + ' × ' + i.name + ' : ' + (i.price * i.qty).toFixed(3) + ' ر.ع');
+  let t = getTotals();
+  saveOrder({name:custName, phone:phone, items:items, sub:t.sub.toFixed(3), vat:t.vat.toFixed(3), ship:t.ship.toFixed(3), total:t.total.toFixed(3), pay:pay, payStatus:payStatus, receipt:true, shipType:shipType, country:country, gov:gov, wilaya:wilaya, area:area, date:new Date().toLocaleString('ar-OM'), timestamp:Date.now()});
+  let msg = '🛍️ طلب جديد من متجر ميث - DARB\n\n👤 الاسم الثلاثي: ' + custName + '\n📞 رقم هاتف الزبونة: ' + phone + '\n\n' + items.join('\n') + '\n\nالمجموع الفرعي: ' + t.sub.toFixed(3) + ' ر.ع\nضريبة القيمة المضافة (5%): ' + t.vat.toFixed(3) + ' ر.ع\n🚚 نوع الشحن: ' + shipType + '\n🚚 قيمة الشحن: ' + t.ship.toFixed(3) + ' ر.ع\nالمجموع الكلي: ' + t.total.toFixed(3) + ' ر.ع\n\nطريقة الدفع: ' + pay + ' ✅\nحالة الدفع: ' + payStatus + '\n🧾 الإيصال: تم إرفاق صورة الإيصال ✅ - الزبونة بترسل الصورة في الواتساب\n\n📍 عنوان التوصيل:\nالبلد: ' + country + '\nالمحافظة: ' + gov + '\nالولاية: ' + wilaya + '\nالمنطقة: ' + area;
+  let url = 'https://wa.me/96894116067?text=' + encodeURIComponent(msg);
+  window.open(url, '_blank');
+  cart = [];updateCartDisplay();
+  document.getElementById('successMsg').style.display = 'block';
+  window.scrollTo(0,0);
+  showToast('تم إرسال طلبج ✅ ارسلي صورة الإيصال في الواتساب');
+}
 function searchStores(){let v = document.getElementById('search').value;document.querySelectorAll('#stores .store').forEach(s=>{s.style.display = s.innerText.includes(v) ? 'block' : 'none';});}
 </script>
 </body>
