@@ -85,6 +85,7 @@ function searchStores(){
     let text = store.innerText.toLowerCase();
     store.style.display = text.includes(value) ? 'block' : 'none';
   });
+}
 function filterCategory(cat){
   let stores = document.querySelectorAll('.store');
   stores.forEach(s => {
