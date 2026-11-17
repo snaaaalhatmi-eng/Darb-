@@ -15,7 +15,7 @@ button{background:#2e5a4a;color:white;border:none;padding:10px 18px;border-radiu
 .product{background:#fff;padding:12px;margin:10px;border-radius:12px;border:1px solid #eee}
 .product img{width:100%;max-width:300px;border-radius:12px}
 footer{background:#1e3a2f;color:white;padding:20px;margin-top:20px}
-input{padding:10px;width:80%;border-radius:10px;border:1px solid #ccc}
+input,select{padding:12px;width:92%;border-radius:10px;border:1px solid #ccc;margin-bottom:10px;box-sizing:border-box}
 </style>
 </head>
 <body>
@@ -25,6 +25,10 @@ input{padding:10px;width:80%;border-radius:10px;border:1px solid #ccc}
 <p>اطلب من أفضل المتاجر</p>
 <input id="search" placeholder="ابحث عن متجر..." onkeyup="searchStores()">
 </header>
+
+<div id="successMsg" style="display:none; background:#e8f5e9; padding:20px; border-radius:15px; margin:15px; text-align:center; font-size:18px; font-weight:bold; border:1px solid #a5d6a7;">
+  تم استلام طلبك بنجاح سنتواصل معكم قريباً ❤️
+</div>
 
 <div class="cart-bar">
 🛒 السلة: <span id="cartCount">0</span> |
@@ -71,6 +75,39 @@ input{padding:10px;width:80%;border-radius:10px;border:1px solid #ccc}
 <button onclick="addToCart('المقشر الكريمي',3.9)">أضف للسلة</button>
 </div>
 
+<!-- طريقة الدفع -->
+<div style="background:white; padding:15px; border-radius:15px; margin:15px; text-align:right; direction:rtl;">
+  <h3 style="display:flex; justify-content:space-between; align-items:center; margin:0 0 15px 0;">الدفع <span style="background:#4CAF50; color:white; border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; font-size:14px;">✓</span></h3>
+  <label style="display:flex; justify-content:space-between; align-items:center; border:1px solid #ddd; padding:14px; border-radius:12px; margin-bottom:10px; cursor:pointer;">
+    <span>💳 تحويل بنكي</span>
+    <input type="radio" name="payment" value="تحويل بنكي" style="width:20px; height:20px;">
+  </label>
+  <label style="display:flex; justify-content:space-between; align-items:center; border:1px solid #ddd; padding:14px; border-radius:12px; cursor:pointer;">
+    <span>💵 الدفع عند الاستلام</span>
+    <input type="radio" name="payment" value="الدفع عند الاستلام" checked style="width:20px; height:20px;">
+  </label>
+  <p style="font-size:12px; color:#888; text-align:center; margin-top:12px;">آمن ومشفر | بالمتابعة توافق على شروط الخدمة</p>
+</div>
+
+<!-- عنوان التوصيل - بدون رقم البيت -->
+<div style="background:white; padding:15px; border-radius:15px; margin:15px; text-align:right; direction:rtl;">
+  <h3 style="margin:0 0 12px 0;">📍 عنوان التوصيل</h3>
+  <label>البلد</label>
+  <select id="country">
+    <option>عُمان</option>
+    <option>الإمارات</option>
+    <option>السعودية</option>
+  </select>
+  <label>الولاية</label>
+  <select id="wilaya">
+    <option>مسقط</option><option>السيب</option><option>بوشر</option><option>مطرح</option><option>العامرات</option><option>قريات</option><option>صلالة</option><option>صحار</option><option>نزوى</option><option>صور</option><option>البريمي</option><option>عبري</option><option>الرستاق</option><option>بركاء</option><option>المصنعة</option><option>السويق</option><option>الخابورة</option><option>صحم</option><option>لوى</option><option>شناص</option>
+  </select>
+  <label>المنطقة / الحي</label>
+  <input id="area" type="text" placeholder="مثال: الخوض، الموالح، العذيبة">
+  <label>رقم الهاتف</label>
+  <input id="phone" type="text" placeholder="مثال: 91234567">
+</div>
+
 </div>
 
 <footer>
@@ -103,10 +140,28 @@ alert('تمت إضافة ' + name + ' للسلة');
 }
 function orderNow(){
 if(cart.length==0){ alert('السلة فاضية'); return; }
-let msg = 'مرحبا، أريد الطلب من متجر ميث - Maith:%0A';
-cart.forEach(item=>{ msg += '- ' + item.name + ' - ' + item.price + '%0A'; });
-  msg += '\nطريقة الدفع: الدفع عند الاستلام 💵';
-window.open('https://wa.me/96894799751?text=' + msg, '_blank');
+let pay = document.querySelector('input[name="payment"]:checked').value;
+let country = document.getElementById('country').value;
+let wilaya = document.getElementById('wilaya').value;
+let area = document.getElementById('area').value;
+let phone = document.getElementById('phone').value;
+if(!area){ alert('اكتبي المنطقة لو سمحتي'); return; }
+let items = cart.map(i => i.name + ' : ' + i.price).join('\n');
+fetch('https://formsubmit.co/ajax/YOUR_EMAIL_HERE', {
+  method: 'POST',
+  headers: {'Content-Type': 'application/json'},
+  body: JSON.stringify({
+    subject: 'طلب جديد من متجر ميثة - DARB',
+    message: 'طلب جديد:\n' + items + '\n\nطريقة الدفع: ' + pay + '\nالبلد: ' + country + '\nالولاية: ' + wilaya + '\nالمنطقة: ' + area + '\nالهاتف: ' + phone
+  })
+}).then(() => {
+  cart = [];
+  document.getElementById('cartCount').innerText = '0';
+  document.getElementById('successMsg').style.display = 'block';
+  window.scrollTo(0,0);
+}).catch(() => {
+  document.getElementById('successMsg').style.display = 'block';
+});
 }
 function searchStores(){
 let v = document.getElementById('search').value;
@@ -115,11 +170,5 @@ s.style.display = s.innerText.includes(v) ? 'block' : 'none';
 });
 }
 </script>
-<div style="background:#fff5f7; padding:15px; border-radius:12px; margin:15px; text-align:right; border:1px solid #ffd6e0;">
-  <h3 style="margin:0 0 10px 0;">💳 طريقة الدفع</h3>
-  <label style="display:block; background:white; padding:12px; border-radius:10px; border:2px solid #ff8fab;">
-    <input type="radio" name="payment" checked>الدفع عند الاستلام
-  </label>
-</div>
 </body>
 </html>
