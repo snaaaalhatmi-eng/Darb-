@@ -16,6 +16,10 @@ button{background:#2e5a4a;color:white;border:none;padding:10px 18px;border-radiu
 .product img{width:100%;max-width:300px;border-radius:12px}
 footer{background:#1e3a2f;color:white;padding:20px;margin-top:20px}
 input,select{padding:12px;width:92%;border-radius:10px;border:1px solid #ccc;margin-bottom:10px;box-sizing:border-box}
+.qty-box{display:flex;align-items:center;justify-content:center;gap:10px;margin:10px 0}
+.qty-btn{width:40px;height:40px;font-size:22px;padding:0;background:#1e3a2f;border-radius:50%}
+.qty-num{font-size:20px;font-weight:bold;min-width:30px}
+.cart-item{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #eee;padding:10px 0;text-align:right}
 </style>
 </head>
 <body>
@@ -60,19 +64,46 @@ input,select{padding:12px;width:92%;border-radius:10px;border:1px solid #ccc;mar
 <div class="product">
 <img src="ABABCCC5-BF2E-4CEE-8DD9-5B5AC99F6846.png">
 <p><b>مقشر النيلة الزرقاء</b> - 5.000</p>
-<button onclick="addToCart('مقشر النيلة الزرقاء',5)">أضف للسلة</button>
+<div class="qty-box">
+<button class="qty-btn" onclick="changeQty('qty1',-1)">-</button>
+<span class="qty-num" id="qty1">1</span>
+<button class="qty-btn" onclick="changeQty('qty1',1)">+</button>
+</div>
+<button onclick="addToCart('مقشر النيلة الزرقاء',5,'qty1')">أضف للسلة</button>
 </div>
 
 <div class="product">
 <img src="DE01894F-B678-41BA-826B-E50AB0E0BBF0.png">
 <p><b>مقشر الجل</b> - 4.500</p>
-<button onclick="addToCart('مقشر الجل',4.5)">أضف للسلة</button>
+<div class="qty-box">
+<button class="qty-btn" onclick="changeQty('qty2',-1)">-</button>
+<span class="qty-num" id="qty2">1</span>
+<button class="qty-btn" onclick="changeQty('qty2',1)">+</button>
+</div>
+<button onclick="addToCart('مقشر الجل',4.5,'qty2')">أضف للسلة</button>
 </div>
 
 <div class="product">
 <img src="DE01894F-B678-41BA-826B-E50AB0E0BBF0.png">
 <p><b>المقشر الكريمي</b> - 3.900</p>
-<button onclick="addToCart('المقشر الكريمي',3.9)">أضف للسلة</button>
+<div class="qty-box">
+<button class="qty-btn" onclick="changeQty('qty3',-1)">-</button>
+<span class="qty-num" id="qty3">1</span>
+<button class="qty-btn" onclick="changeQty('qty3',1)">+</button>
+</div>
+<button onclick="addToCart('المقشر الكريمي',3.9,'qty3')">أضف للسلة</button>
+</div>
+
+<!-- 🛒 سلة المنتجات -->
+<div style="background:white; padding:15px; border-radius:15px; margin:15px; text-align:right; direction:rtl;">
+  <h3 style="margin:0 0 12px 0;">🛒 سلة المنتجات</h3>
+  <div id="cartItems">
+    <p style="color:#888; text-align:center;">السلة فاضية، أضيفي منتجات من فوق 👆</p>
+  </div>
+  <div id="cartTotal" style="display:none; border-top:2px solid #1e3a2f; padding-top:10px; margin-top:10px; font-weight:bold; font-size:18px; display:flex; justify-content:space-between;">
+    <span>المجموع الكلي:</span>
+    <span id="totalPrice">0.000 ر.ع</span>
+  </div>
 </div>
 
 <!-- طريقة الدفع - 3 خيارات -->
@@ -143,6 +174,12 @@ input,select{padding:12px;width:92%;border-radius:10px;border:1px solid #ccc;mar
   <input id="phone" type="text" placeholder="مثال: 91234567">
 </div>
 
+<!-- زر إرسال الطلب في نهاية الصفحة -->
+<div style="margin:20px 15px 30px 15px;">
+  <button onclick="orderNow()" style="width:100%; padding:18px; font-size:20px; font-weight:bold; background:#1e3a2f; border-radius:15px;">✅ إرسال الطلب</button>
+  <p style="font-size:13px; color:#888;">بالضغط على إرسال الطلب، سيتم إرسال طلبك لمتجر ميث</p>
+</div>
+
 </div>
 
 <footer>
@@ -195,10 +232,42 @@ function backToStores(){
 document.getElementById('home').style.display='block';
 document.getElementById('store-Maith').style.display='none';
 }
-function addToCart(name, price){
-cart.push({name:name, price:price});
-document.getElementById('cartCount').innerText = cart.length;
-alert('تمت إضافة ' + name + ' للسلة');
+function changeQty(id, change){
+let el = document.getElementById(id);
+let val = parseInt(el.innerText) + change;
+if(val < 1) val = 1;
+if(val > 99) val = 99;
+el.innerText = val;
+}
+function addToCart(name, price, qtyId){
+let qty = parseInt(document.getElementById(qtyId).innerText);
+cart.push({name:name, price:price, qty:qty});
+updateCartDisplay();
+alert('تمت إضافة ' + qty + ' × ' + name + ' للسلة');
+document.getElementById(qtyId).innerText = '1';
+}
+function updateCartDisplay(){
+let totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+document.getElementById('cartCount').innerText = totalQty;
+let box = document.getElementById('cartItems');
+let totalBox = document.getElementById('cartTotal');
+if(cart.length==0){
+box.innerHTML = '<p style="color:#888; text-align:center;">السلة فاضية، أضيفي منتجات من فوق 👆</p>';
+totalBox.style.display = 'none';
+return;
+}
+let html = '';
+cart.forEach((item, index)=>{
+html += '<div class="cart-item"><div><b>' + item.name + '</b><br><span style="color:#888; font-size:13px;">' + item.qty + ' × ' + item.price.toFixed(3) + ' ر.ع</span></div><div><b>' + (item.price * item.qty).toFixed(3) + ' ر.ع</b><br><button onclick="removeItem(' + index + ')" style="background:#c62828; padding:5px 10px; font-size:12px;">حذف ❌</button></div></div>';
+});
+box.innerHTML = html;
+let total = cart.reduce((sum, i) => sum + (i.price * i.qty), 0).toFixed(3);
+document.getElementById('totalPrice').innerText = total + ' ر.ع';
+totalBox.style.display = 'flex';
+}
+function removeItem(index){
+cart.splice(index,1);
+updateCartDisplay();
 }
 function orderNow(){
 if(cart.length==0){ alert('السلة فاضية'); return; }
@@ -209,17 +278,18 @@ let wilaya = document.getElementById('wilaya').value;
 let area = document.getElementById('area').value;
 let phone = document.getElementById('phone').value;
 if(!area){ alert('اكتبي المنطقة لو سمحتي'); return; }
-let items = cart.map(i => i.name + ' : ' + i.price).join('\n');
+let items = cart.map(i => i.qty + ' × ' + i.name + ' : ' + (i.price * i.qty).toFixed(3) + ' ر.ع').join('\n');
+let total = cart.reduce((sum, i) => sum + (i.price * i.qty), 0).toFixed(3);
 fetch('https://formsubmit.co/ajax/snaaaalhatmi@gmail.com', {
   method: 'POST',
   headers: {'Content-Type': 'application/json'},
   body: JSON.stringify({
     subject: 'طلب جديد من متجر ميث - DARB',
-    message: 'طلب جديد:\n' + items + '\n\nطريقة الدفع: ' + pay + '\nالبلد: ' + country + '\nالمحافظة: ' + gov + '\nالولاية: ' + wilaya + '\nالمنطقة: ' + area + '\nالهاتف: ' + phone
+    message: 'طلب جديد:\n' + items + '\n\nالمجموع: ' + total + ' ر.ع' + '\n\nطريقة الدفع: ' + pay + '\nالبلد: ' + country + '\nالمحافظة: ' + gov + '\nالولاية: ' + wilaya + '\nالمنطقة: ' + area + '\nالهاتف: ' + phone
   })
 }).then(() => {
   cart = [];
-  document.getElementById('cartCount').innerText = '0';
+  updateCartDisplay();
   document.getElementById('successMsg').style.display = 'block';
   window.scrollTo(0,0);
 }).catch(() => {
